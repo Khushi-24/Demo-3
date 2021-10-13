@@ -1,6 +1,5 @@
 package com.example.Demo3.dtos;
 
-import com.example.Demo3.entities.City;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,4 +22,9 @@ public class AreaDto {
     @NotNull(message = "City Id is required.")
     @NotBlank(message = "City Id is required.")
     private CityDto cityDto;
+
+    public AreaDto(Long areaId, String areaName) {
+        this.areaId = areaId;
+        this.areaName = areaName;
+    }
 }
