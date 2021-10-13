@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "Area")
 @Getter
@@ -19,4 +21,7 @@ public class Area {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cityId", referencedColumnName = "cityId")
     private City city;
+
+    @OneToMany(mappedBy = "area", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Society> societies = new HashSet<>();
 }
