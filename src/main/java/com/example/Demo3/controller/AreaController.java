@@ -29,7 +29,7 @@ public class AreaController {
         Page<AreaDto> areaDtoPage = areaService.getAllArea(pageNo);
         List<AreaDto> areaDtoList = areaDtoPage.getContent();
         if(pageNo> areaDtoPage.getTotalPages()){
-            throw new NotFoundException(HttpStatus.NOT_FOUND, "No further page available, total no. of available pages is " +(areaDtoPage.getTotalPages() + 1));
+            throw new NotFoundException(HttpStatus.NOT_FOUND, "No further page available");
         }
         return new ResponseEntity<>(areaDtoList, HttpStatus.OK);
     }

@@ -29,7 +29,7 @@ public class CityController {
         Page<CityDto> cityDtoPage = cityService.getAllCities(pageNo);
         List<CityDto> cityDtoList = cityDtoPage.getContent();
         if(pageNo> cityDtoPage.getTotalPages()){
-            throw new NotFoundException(HttpStatus.NOT_FOUND, "No further page available, total no. of available pages is " +(cityDtoPage.getTotalPages() + 1));
+            throw new NotFoundException(HttpStatus.NOT_FOUND, "No further page available");
         }
         return new ResponseEntity<>(cityDtoList, HttpStatus.OK);
     }
