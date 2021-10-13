@@ -1,10 +1,8 @@
 package com.example.Demo3.serviceImpl;
 
-import com.example.Demo3.dtos.AreaDto;
 import com.example.Demo3.dtos.SocietyDto;
 import com.example.Demo3.entities.Area;
 import com.example.Demo3.entities.Society;
-import com.example.Demo3.exception.AlreadyExistsException;
 import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.repository.AreaRepository;
 import com.example.Demo3.repository.SocietyRepository;
