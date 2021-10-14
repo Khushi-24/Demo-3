@@ -7,4 +7,6 @@ public interface SocietyService {
     SocietyDto addSociety(SocietyDto societyDto);
 
     Page<SocietyDto> getAllSociety(int pageNo);
+
+    SocietyDto getSocietyBySocietyId(Long societyId);
 }

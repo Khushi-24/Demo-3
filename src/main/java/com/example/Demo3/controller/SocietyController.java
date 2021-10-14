@@ -26,7 +26,7 @@ public class SocietyController {
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
-    @GetMapping("/getAllSociety/{pageNo}")
+    @PostMapping("/getAllSociety/{pageNo}")
     public ResponseEntity<?> getAllSociety(@PathVariable int pageNo){
         Page<SocietyDto> societyDtoPage = societyService.getAllSociety(pageNo);
         List<SocietyDto> societyDtoList = societyDtoPage.getContent();
@@ -36,4 +36,9 @@ public class SocietyController {
         return new ResponseEntity<>(societyDtoList, HttpStatus.OK);
     }
 
+    @GetMapping("/getSocietyBySocietyId/{societyId}")
+    public ResponseEntity<?> getSocietyBySocietyId(@PathVariable Long societyId){
+        SocietyDto societyDto = societyService.getSocietyBySocietyId(societyId);
+        return new ResponseEntity<>(societyDto, HttpStatus.OK);
+    }
 }

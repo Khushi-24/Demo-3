@@ -71,6 +71,15 @@ public class SocietyServiceImpl implements SocietyService {
         return new PageImpl<>(societyDtoList,  pageable, societyDtoList.size());
     }
 
+    @Override
+    public SocietyDto getSocietyBySocietyId(Long societyId) {
+        Society society = societyRepository.findById(societyId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
+                "Society doesn't exists."));
+        SocietyDto societyDto = new SocietyDto();
+        modelMapper.map(society,societyDto);
+        return societyDto;
+    }
+
     public String getEncodedPassword(String password) {
         return passwordEncoder.encode(password);
     }
