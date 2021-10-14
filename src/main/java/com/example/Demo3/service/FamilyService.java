@@ -4,4 +4,6 @@ import com.example.Demo3.dtos.FamilyDto;
 
 public interface FamilyService {
     FamilyDto addFamily(FamilyDto familyDto);
+
+    FamilyDto getFamilyByFamilyId(Long familyId);
 }

@@ -1,8 +1,10 @@
 package com.example.Demo3.serviceImpl;
 
+import com.example.Demo3.dtos.AreaDto;
 import com.example.Demo3.dtos.SocietyDto;
 import com.example.Demo3.dtos.UserDto;
 import com.example.Demo3.entities.Area;
+import com.example.Demo3.entities.City;
 import com.example.Demo3.entities.Society;
 import com.example.Demo3.entities.User;
 import com.example.Demo3.exception.AlreadyExistsException;
@@ -76,6 +78,11 @@ public class SocietyServiceImpl implements SocietyService {
         Society society = societyRepository.findById(societyId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
                 "Society doesn't exists."));
         SocietyDto societyDto = new SocietyDto();
+        Area area = society.getArea();
+        City city = area.getCity();
+        city.setCityState(null);
+        area.setCity(city);
+        society.setArea(area);
         modelMapper.map(society,societyDto);
         return societyDto;
     }

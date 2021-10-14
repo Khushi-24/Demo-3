@@ -1,7 +1,6 @@
 package com.example.Demo3.serviceImpl;
 
-import com.example.Demo3.dtos.FamilyDto;
-import com.example.Demo3.dtos.MemberDto;
+import com.example.Demo3.dtos.*;
 import com.example.Demo3.entities.Family;
 import com.example.Demo3.entities.Members;
 import com.example.Demo3.entities.Society;
@@ -37,4 +36,23 @@ public class FamilyServiceImpl implements FamilyService {
         familyRepository.save(family);
         return familyDto;
     }
+
+    @Override
+    public FamilyDto getFamilyByFamilyId(Long familyId) {
+        Family family = familyRepository.findById(familyId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
+                "Family doesn't exists"));
+        FamilyDto familyDto = new FamilyDto();
+        modelMapper.map(family, familyDto);
+//        SocietyDto societyDto = familyDto.getSocietyDto();
+//        societyDto.setSocietyAddress(null);
+//        societyDto.setUserDto(null);
+//        AreaDto areaDto = societyDto.getAreaDto();
+//        CityDto cityDto = areaDto.getCityDto();
+//        cityDto.setCityState(null);
+//        areaDto.setCityDto(cityDto);
+//        societyDto.setAreaDto(areaDto);
+//        familyDto.setSocietyDto(societyDto);
+        return familyDto;
+    }
+
 }
