@@ -1,7 +1,6 @@
 package com.example.Demo3.serviceImpl;
 
 import com.example.Demo3.dtos.AreaDto;
-import com.example.Demo3.dtos.CityDto;
 import com.example.Demo3.entities.Area;
 import com.example.Demo3.entities.City;
 import com.example.Demo3.exception.AlreadyExistsException;
@@ -18,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,5 +65,15 @@ public class AreaServiceImpl implements AreaService {
         AreaDto areaDto = new AreaDto();
         modelMapper.map(area, areaDto);
         return areaDto;
+    }
+
+    @Override
+    public List<AreaDto> getListOfAreaByCityId(Long cityId) {
+
+        List<Area> areaList = areaRepository.findAllByCityCityId(cityId);
+        List<AreaDto> areaDtoList =areaList.stream().map((Area area)-> new AreaDto(
+                area.getAreaId(),
+                area.getAreaName())).collect(Collectors.toList());
+        return areaDtoList;
     }
 }

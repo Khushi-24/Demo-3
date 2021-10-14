@@ -1,8 +1,8 @@
 package com.example.Demo3.controller;
 
 import com.example.Demo3.dtos.AreaDto;
-import com.example.Demo3.dtos.CityDto;
 import com.example.Demo3.exception.NotFoundException;
+import com.example.Demo3.repository.AreaRepository;
 import com.example.Demo3.service.AreaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +17,13 @@ import java.util.List;
 public class AreaController {
 
     private final AreaService areaService;
+    private final AreaRepository areaRepository;
+
+    @GetMapping("/getCountOfAreaByCityId/{cityId}")
+    public Long Long (@PathVariable Long cityId){
+        Long count = areaRepository.countByCityCityId(cityId);
+        return count;
+    }
 
     @PostMapping("/addArea")
     public ResponseEntity<?> addArea(@RequestBody AreaDto areaDto){
@@ -38,5 +45,11 @@ public class AreaController {
     public ResponseEntity<?> getAreaByAreaId(@PathVariable Long areaId){
         AreaDto areaDto = areaService.getAreaByAreaId(areaId);
         return new ResponseEntity<>(areaDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/getListOfAreaByCityId/{cityId}")
+    public ResponseEntity<?> getListOfAreaByCityId(@PathVariable Long cityId){
+        List<AreaDto> areaDtoList = areaService.getListOfAreaByCityId(cityId);
+        return new ResponseEntity<>(areaDtoList, HttpStatus.OK);
     }
 }
