@@ -77,4 +77,21 @@ public class MemberServiceImpl implements MemberService {
                         member.getMemberName())).collect(Collectors.toList());
         return new PageImpl<>(memberDtoList,  pageable, memberDtoList.size());
     }
+
+    @Override
+    public List<MemberDto> getAllMembersByFamilyId(Long familyId) {
+        if(familyId != null){
+            Family family = familyRepository.findById(familyId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
+                    "Family doesn't exists"));
+            List<Members> membersList = memberRepository.findAllByFamilyFamilyId(familyId);
+            List<MemberDto> memberDtoList = membersList.stream().map((Members member) ->
+                    new MemberDto(
+                            member.getMemberId(),
+                            member.getMemberName())).collect(Collectors.toList());
+            return memberDtoList;
+        }
+        else {
+            throw new BadRequestException(HttpStatus.BAD_REQUEST, "Family Id can't be null.");
+        }
+    }
 }

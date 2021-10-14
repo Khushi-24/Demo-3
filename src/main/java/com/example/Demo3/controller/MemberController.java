@@ -39,4 +39,10 @@ public class MemberController {
         }
         return new ResponseEntity<>(memberDtoList, HttpStatus.OK);
     }
+
+    @GetMapping("/getAllMembersByFamilyId/{familyId}")
+    public ResponseEntity<?> getAllMembersByFamilyId(@PathVariable Long familyId){
+        List<MemberDto> memberDtoList = memberService.getAllMembersByFamilyId(familyId);
+        return new ResponseEntity<>(memberDtoList, HttpStatus.OK);
+    }
 }
