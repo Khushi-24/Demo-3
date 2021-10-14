@@ -8,6 +8,7 @@ import com.example.Demo3.entities.City;
 import com.example.Demo3.entities.Society;
 import com.example.Demo3.entities.User;
 import com.example.Demo3.exception.AlreadyExistsException;
+import com.example.Demo3.exception.BadRequestException;
 import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.repository.AreaRepository;
 import com.example.Demo3.repository.SocietyRepository;
@@ -85,6 +86,23 @@ public class SocietyServiceImpl implements SocietyService {
         society.setArea(area);
         modelMapper.map(society,societyDto);
         return societyDto;
+    }
+
+    @Override
+    public List<SocietyDto> getSocietyByAreaId(Long areaId) {
+        if(areaId != null){
+            Area area = areaRepository.findById(areaId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
+                    "Area doesn't exists with areaId " + areaId));
+            List<Society> societyList = societyRepository.findAllByAreaAreaId(areaId);
+            List<SocietyDto> societyDtoList = societyList.stream().map((Society society) ->
+                    new SocietyDto(
+                            society.getSocietyId(),
+                            society.getSocietyName())).collect(Collectors.toList());
+            return societyDtoList;
+        }
+       else {
+           throw new BadRequestException(HttpStatus.BAD_REQUEST, "Area Id can't be null.");
+        }
     }
 
     public String getEncodedPassword(String password) {

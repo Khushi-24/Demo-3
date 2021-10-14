@@ -41,4 +41,10 @@ public class SocietyController {
         SocietyDto societyDto = societyService.getSocietyBySocietyId(societyId);
         return new ResponseEntity<>(societyDto, HttpStatus.OK);
     }
+
+    @GetMapping("/getSocietyByAreaId/{areaId}")
+    public ResponseEntity<?> getSocietyByAreaId(@PathVariable Long areaId){
+        List<SocietyDto> societyDtoList = societyService.getSocietyByAreaId(areaId);
+        return new ResponseEntity<>(societyDtoList, HttpStatus.OK);
+    }
 }

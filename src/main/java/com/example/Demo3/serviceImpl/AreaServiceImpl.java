@@ -4,6 +4,7 @@ import com.example.Demo3.dtos.AreaDto;
 import com.example.Demo3.entities.Area;
 import com.example.Demo3.entities.City;
 import com.example.Demo3.exception.AlreadyExistsException;
+import com.example.Demo3.exception.BadRequestException;
 import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.repository.AreaRepository;
 import com.example.Demo3.repository.CityRepository;
@@ -69,11 +70,17 @@ public class AreaServiceImpl implements AreaService {
 
     @Override
     public List<AreaDto> getListOfAreaByCityId(Long cityId) {
-
-        List<Area> areaList = areaRepository.findAllByCityCityId(cityId);
-        List<AreaDto> areaDtoList =areaList.stream().map((Area area)-> new AreaDto(
-                area.getAreaId(),
-                area.getAreaName())).collect(Collectors.toList());
-        return areaDtoList;
+        if(cityId != null){
+            City city = cityRepository.findById(cityId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
+                    "City doesn't exists with areaId " + cityId));
+            List<Area> areaList = areaRepository.findAllByCityCityId(cityId);
+            List<AreaDto> areaDtoList =areaList.stream().map((Area area)-> new AreaDto(
+                    area.getAreaId(),
+                    area.getAreaName())).collect(Collectors.toList());
+            return areaDtoList;
+        }
+        else {
+            throw new BadRequestException(HttpStatus.BAD_REQUEST, "City Id can't be null.");
+        }
     }
 }

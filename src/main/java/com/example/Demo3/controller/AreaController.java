@@ -17,13 +17,6 @@ import java.util.List;
 public class AreaController {
 
     private final AreaService areaService;
-    private final AreaRepository areaRepository;
-
-    @GetMapping("/getCountOfAreaByCityId/{cityId}")
-    public Long Long (@PathVariable Long cityId){
-        Long count = areaRepository.countByCityCityId(cityId);
-        return count;
-    }
 
     @PostMapping("/addArea")
     public ResponseEntity<?> addArea(@RequestBody AreaDto areaDto){
