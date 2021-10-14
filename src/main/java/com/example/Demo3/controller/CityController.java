@@ -24,7 +24,7 @@ public class CityController {
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
-    @GetMapping("/getAllCities/{pageNo}")
+    @PostMapping("/getAllCities/{pageNo}")
     public ResponseEntity<?> getAllCities(@PathVariable int pageNo){
         Page<CityDto> cityDtoPage = cityService.getAllCities(pageNo);
         List<CityDto> cityDtoList = cityDtoPage.getContent();
