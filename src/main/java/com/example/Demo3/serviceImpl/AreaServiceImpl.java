@@ -57,4 +57,13 @@ public class AreaServiceImpl implements AreaService {
                         area.getAreaName())).collect(Collectors.toList());
         return new PageImpl<>(cityDtoList,  pageable, cityDtoList.size());
     }
+
+    @Override
+    public AreaDto getAreaByAreaId(Long areaId) {
+        Area area = areaRepository.findById(areaId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
+                "Area doesn't exists with areaId " + areaId));
+        AreaDto areaDto = new AreaDto();
+        modelMapper.map(area, areaDto);
+        return areaDto;
+    }
 }

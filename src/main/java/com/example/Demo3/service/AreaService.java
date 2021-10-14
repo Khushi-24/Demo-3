@@ -7,4 +7,6 @@ public interface AreaService {
     AreaDto addArea(AreaDto areaDto);
 
     Page<AreaDto> getAllArea(int pageNo);
+
+    AreaDto getAreaByAreaId(Long areaId);
 }

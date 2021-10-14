@@ -24,7 +24,7 @@ public class AreaController {
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
-    @GetMapping("/getAllArea/{pageNo}")
+    @PostMapping("/getAllArea/{pageNo}")
     public ResponseEntity<?> getAllArea(@PathVariable int pageNo){
         Page<AreaDto> areaDtoPage = areaService.getAllArea(pageNo);
         List<AreaDto> areaDtoList = areaDtoPage.getContent();
@@ -32,5 +32,11 @@ public class AreaController {
             throw new NotFoundException(HttpStatus.NOT_FOUND, "No further page available");
         }
         return new ResponseEntity<>(areaDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAreaByAreaId/{areaId}")
+    public ResponseEntity<?> getAreaByAreaId(@PathVariable Long areaId){
+        AreaDto areaDto = areaService.getAreaByAreaId(areaId);
+        return new ResponseEntity<>(areaDto, HttpStatus.OK);
     }
 }
