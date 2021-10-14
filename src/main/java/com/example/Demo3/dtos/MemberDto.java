@@ -18,6 +18,9 @@ public class MemberDto {
     @NotBlank(message = "Member name is required.")
     private Long memberAge;
 
+    @NotNull(message = "Mention whether member is working or not.")
+    private Boolean isWorking;
+
     @NotNull(message = "Family Id is required")
     private FamilyDto familyDto;
 }

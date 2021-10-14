@@ -20,6 +20,9 @@ public class Members {
     @Column
     private Long memberAge;
 
+    @Column
+    private Boolean isWorking;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "familyId", referencedColumnName = "familyId")
     private Family family;
