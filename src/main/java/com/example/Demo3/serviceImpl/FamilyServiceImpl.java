@@ -1,8 +1,11 @@
 package com.example.Demo3.serviceImpl;
 
 import com.example.Demo3.dtos.FamilyDto;
+import com.example.Demo3.dtos.MemberDto;
 import com.example.Demo3.entities.Family;
+import com.example.Demo3.entities.Members;
 import com.example.Demo3.entities.Society;
+import com.example.Demo3.exception.BadRequestException;
 import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.repository.FamilyRepository;
 import com.example.Demo3.repository.SocietyRepository;
@@ -11,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor

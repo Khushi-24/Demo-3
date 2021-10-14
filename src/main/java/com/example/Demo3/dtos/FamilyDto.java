@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,4 +23,5 @@ public class FamilyDto {
 
     @NotNull(message = "Society Id is required.")
     private SocietyDto societyDto;
+
 }
