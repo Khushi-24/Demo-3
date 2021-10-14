@@ -1,9 +1,11 @@
 package com.example.Demo3.serviceImpl;
 
 import com.example.Demo3.dtos.SocietyDto;
+import com.example.Demo3.dtos.UserDto;
 import com.example.Demo3.entities.Area;
 import com.example.Demo3.entities.Society;
 import com.example.Demo3.entities.User;
+import com.example.Demo3.exception.AlreadyExistsException;
 import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.repository.AreaRepository;
 import com.example.Demo3.repository.SocietyRepository;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,17 +36,27 @@ public class SocietyServiceImpl implements SocietyService {
 
     private final ModelMapper modelMapper = new ModelMapper();
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public SocietyDto addSociety(SocietyDto societyDto) {
         Area area = areaRepository.findById(societyDto.getAreaDto().getAreaId()).orElseThrow(() ->
                 new NotFoundException(HttpStatus.NOT_FOUND, "No such area exists with area Id " + societyDto.getAreaDto().getAreaId()));
-        Society society = new Society();
-        modelMapper.map(societyDto, society);
-        User user = society.getUser();
-        userRepository.save(user);
-        societyRepository.save(society);
-        return societyDto;
-
+        if (!userRepository.existsByUserEmail(societyDto.getUserDto().getUserEmail())) {
+            Society society = new Society();
+            modelMapper.map(societyDto, society);
+            UserDto userDto = societyDto.getUserDto();
+            User user = new User();
+            modelMapper.map(userDto, user);
+            user.setUserPassword(getEncodedPassword(user.getUserPassword()));
+            userRepository.save(user);
+            society.setSocietyAdminEmail(user.getUserEmail());
+            societyRepository.save(society);
+            societyDto.getUserDto().setUserPassword(null);
+            return societyDto;
+        } else {
+            throw new AlreadyExistsException(HttpStatus.CONFLICT, "Society Admin Already exists.");
+        }
     }
 
     @Override
@@ -57,4 +70,9 @@ public class SocietyServiceImpl implements SocietyService {
                         society.getSocietyName())).collect(Collectors.toList());
         return new PageImpl<>(societyDtoList,  pageable, societyDtoList.size());
     }
+
+    public String getEncodedPassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
 }

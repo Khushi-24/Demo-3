@@ -1,5 +1,6 @@
 package com.example.Demo3.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +27,4 @@ public class User {
     @Column
     private String userRole;
 
-    @OneToOne(mappedBy = "user")
-    private Society society;
 }
