@@ -1,6 +1,6 @@
 package com.example.Demo3.serviceImpl;
 
-import com.example.Demo3.dtos.MemberDto;
+import com.example.Demo3.dtos.*;
 import com.example.Demo3.entities.Family;
 import com.example.Demo3.entities.Members;
 import com.example.Demo3.exception.BadRequestException;
@@ -36,5 +36,25 @@ public class MemberServiceImpl implements MemberService {
         }else {
             throw new BadRequestException(HttpStatus.BAD_REQUEST, "Members can't exceed family size.");
         }
+    }
+
+    @Override
+    public MemberDto getMemberByMemberId(Long memberId) {
+        Members members = memberRepository.findById(memberId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
+                "Member doesn't exists."));
+        MemberDto memberDto = new MemberDto();
+        modelMapper.map(members, memberDto);
+//        FamilyDto familyDto = memberDto.getFamilyDto();
+//        SocietyDto societyDto = familyDto.getSocietyDto();
+//        societyDto.setSocietyAddress(null);
+//        societyDto.setUserDto(null);
+//        AreaDto areaDto = societyDto.getAreaDto();
+//        CityDto cityDto = areaDto.getCityDto();
+//        cityDto.setCityState(null);
+//        areaDto.setCityDto(cityDto);
+//        societyDto.setAreaDto(areaDto);
+//        familyDto.setSocietyDto(societyDto);
+//        memberDto.setFamilyDto(familyDto);
+        return memberDto;
     }
 }

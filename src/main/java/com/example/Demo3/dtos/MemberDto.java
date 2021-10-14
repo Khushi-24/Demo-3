@@ -1,5 +1,6 @@
 package com.example.Demo3.dtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MemberDto {
 
     @NotNull(message = "Member name is required.")
