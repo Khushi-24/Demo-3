@@ -1,11 +1,10 @@
 package com.example.Demo3.repository;
 
-import com.example.Demo3.entities.Members;
+import com.example.Demo3.dtos.CompanyDto;
+import com.example.Demo3.entities.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Members, Long> {
-
-    Long countByFamilyFamilyId(Long familyId);
+public interface CompanyRepository extends JpaRepository<Company, Long> {
 }
