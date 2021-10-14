@@ -16,7 +16,6 @@ public class Family {
 
     private Long familyMembers;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "societyId", referencedColumnName = "societyId")
     private Society society;

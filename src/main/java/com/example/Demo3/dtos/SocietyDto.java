@@ -26,6 +26,9 @@ public class SocietyDto {
     @NotNull(message = "Area Id is required.")
     private AreaDto areaDto;
 
+    @NotNull(message = "User data is required.")
+    private UserDto userDto;
+
     public SocietyDto(Long societyId, String societyName) {
         this.societyId = societyId;
         this.societyName = societyName;

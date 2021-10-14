@@ -3,9 +3,11 @@ package com.example.Demo3.serviceImpl;
 import com.example.Demo3.dtos.SocietyDto;
 import com.example.Demo3.entities.Area;
 import com.example.Demo3.entities.Society;
+import com.example.Demo3.entities.User;
 import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.repository.AreaRepository;
 import com.example.Demo3.repository.SocietyRepository;
+import com.example.Demo3.repository.UserRepository;
 import com.example.Demo3.service.SocietyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -25,6 +27,8 @@ public class SocietyServiceImpl implements SocietyService {
 
     private final AreaRepository areaRepository;
 
+    private final UserRepository userRepository;
+
     private final SocietyRepository societyRepository;
 
     private final ModelMapper modelMapper = new ModelMapper();
@@ -35,6 +39,8 @@ public class SocietyServiceImpl implements SocietyService {
                 new NotFoundException(HttpStatus.NOT_FOUND, "No such area exists with area Id " + societyDto.getAreaDto().getAreaId()));
         Society society = new Society();
         modelMapper.map(societyDto, society);
+        User user = society.getUser();
+        userRepository.save(user);
         societyRepository.save(society);
         return societyDto;
 

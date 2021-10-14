@@ -1,5 +1,6 @@
 package com.example.Demo3.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,10 @@ public class Society {
 
     @Column
     private String societyAddress;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "societyAdmin", referencedColumnName = "userId")
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "areaId", referencedColumnName = "areaId")

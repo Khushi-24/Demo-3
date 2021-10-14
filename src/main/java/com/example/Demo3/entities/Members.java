@@ -14,11 +14,11 @@ public class Members {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
+    @Column
     private String memberName;
 
+    @Column
     private Long memberAge;
-
-    private Boolean isFamilyAdmin;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "familyId", referencedColumnName = "familyId")

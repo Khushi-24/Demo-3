@@ -2,7 +2,9 @@ package com.example.Demo3.controller;
 
 import com.example.Demo3.dtos.AreaDto;
 import com.example.Demo3.dtos.SocietyDto;
+import com.example.Demo3.entities.Society;
 import com.example.Demo3.exception.NotFoundException;
+import com.example.Demo3.repository.SocietyRepository;
 import com.example.Demo3.service.SocietyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,4 +35,5 @@ public class SocietyController {
         }
         return new ResponseEntity<>(societyDtoList, HttpStatus.OK);
     }
+
 }
