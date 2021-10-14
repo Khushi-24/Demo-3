@@ -2,6 +2,7 @@ package com.example.Demo3.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FamilyDto {
 
@@ -24,4 +26,8 @@ public class FamilyDto {
     @NotNull(message = "Society Id is required.")
     private SocietyDto societyDto;
 
+    public FamilyDto(Long familyId, Long familyMembers) {
+        this.familyId = familyId;
+        this.familyMembers = familyMembers;
+    }
 }
