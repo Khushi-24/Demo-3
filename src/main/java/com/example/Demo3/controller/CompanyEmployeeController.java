@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,24 +23,28 @@ public class CompanyEmployeeController {
     private final CompanyEmployeeService companyEmployeeService;
 
     @PostMapping("/addMemberToCompany")
+    @PreAuthorize("hasAnyRole('Admin','Company Admin')")
     private ResponseEntity<?> addMemberToCompany(@RequestBody CompanyEmployeeDto companyEmployeeDto){
         CompanyEmployeeDto dto = companyEmployeeService.addMemberToCompany(companyEmployeeDto);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @GetMapping("/getListOfEmployeesHavingSalaryLessByAreaId")
+    @PreAuthorize("hasAnyRole('Admin','Company Admin')")
     private ResponseEntity<?> getListOfEmployeesHavingSalaryLessByAreaId(@RequestBody RequestDtoForGettingEmployeesByAreaId dto){
         List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryLessByAreaId(dto);
         return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
     }
 
     @GetMapping("/getListOfEmployeesHavingSalaryLessThanAndByCityId")
+    @PreAuthorize("hasAnyRole('Admin','Company Admin')")
     private ResponseEntity<?> getListOfEmployeesHavingSalaryLessThanAndByCityId(@RequestBody RequestDtoForGettingEmployeesByCityId dto){
         List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryLessThanAndByCityId(dto);
         return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
     }
 
     @GetMapping("/getListOfEmployeesHavingSalaryLessThanAndBySocietyId")
+    @PreAuthorize("hasAnyRole('Admin','Company Admin')")
     private ResponseEntity<?> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(@RequestBody RequestDtoForGettingEmployeesBySocietyId dto){
         List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryLessThanAndBySocietyId(dto);
         return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
