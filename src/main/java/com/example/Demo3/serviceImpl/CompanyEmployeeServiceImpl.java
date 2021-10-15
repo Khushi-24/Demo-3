@@ -3,6 +3,7 @@ package com.example.Demo3.serviceImpl;
 import com.example.Demo3.dtos.CompanyEmployeeDto;
 import com.example.Demo3.dtos.RequestDtoForGettingEmployeesByAreaId;
 import com.example.Demo3.dtos.RequestDtoForGettingEmployeesByCityId;
+import com.example.Demo3.dtos.RequestDtoForGettingEmployeesBySocietyId;
 import com.example.Demo3.entities.*;
 import com.example.Demo3.exception.AlreadyExistsException;
 import com.example.Demo3.exception.BadRequestException;
@@ -104,6 +105,19 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
 
         List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndByCityId(
                 dto.getCityId(),
+                dto.getSalary()
+        );
+        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployees.stream().map((CompanyEmployee employee)->
+                new CompanyEmployeeDto(employee.getCompanyEmployeeId() ,
+                        employee.getEmployeeName(),
+                        employee.getSalary())).collect(Collectors.toList());
+        return companyEmployeeDtoList;
+    }
+
+    @Override
+    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(RequestDtoForGettingEmployeesBySocietyId dto) {
+        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndBySocietyId(
+                dto.getSocietyId(),
                 dto.getSalary()
         );
         List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployees.stream().map((CompanyEmployee employee)->

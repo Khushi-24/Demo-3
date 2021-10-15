@@ -3,6 +3,7 @@ package com.example.Demo3.controller;
 import com.example.Demo3.dtos.CompanyEmployeeDto;
 import com.example.Demo3.dtos.RequestDtoForGettingEmployeesByAreaId;
 import com.example.Demo3.dtos.RequestDtoForGettingEmployeesByCityId;
+import com.example.Demo3.dtos.RequestDtoForGettingEmployeesBySocietyId;
 import com.example.Demo3.entities.CompanyEmployee;
 import com.example.Demo3.service.CompanyEmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,12 @@ public class CompanyEmployeeController {
     @GetMapping("/getListOfEmployeesHavingSalaryLessThanAndByCityId")
     private ResponseEntity<?> getListOfEmployeesHavingSalaryLessThanAndByCityId(@RequestBody RequestDtoForGettingEmployeesByCityId dto){
         List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryLessThanAndByCityId(dto);
+        return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/getListOfEmployeesHavingSalaryLessThanAndBySocietyId")
+    private ResponseEntity<?> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(@RequestBody RequestDtoForGettingEmployeesBySocietyId dto){
+        List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryLessThanAndBySocietyId(dto);
         return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
     }
 

@@ -20,4 +20,7 @@ public interface CompanyEmployeeRepository extends JpaRepository<CompanyEmployee
 
     @Query(value = "SELECT * FROM company_employee where city_city_id= ?1 And aggregated_salary< ?2", nativeQuery = true)
     List<CompanyEmployee> getListOfEmployeesHavingSalaryLessThanAndByCityId(Long cityId, Long salary);
+
+    @Query(value = "SELECT c.company_employee_id, c.city_city_id, c.salary, c.designation, c.member_id, c.company_id, c.employee_name ,c.aggregated_salary, c.area_id FROM company_employee as c INNER Join society AS s ON s.area_id = c.area_id where s.society_id= ?1 And c.aggregated_salary< ?2", nativeQuery = true)
+    List<CompanyEmployee> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(Long societyId, Long salary);
 }
