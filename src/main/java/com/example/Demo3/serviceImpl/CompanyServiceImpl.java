@@ -1,5 +1,6 @@
 package com.example.Demo3.serviceImpl;
 
+import com.example.Demo3.dtos.CityDto;
 import com.example.Demo3.dtos.CompanyDto;
 import com.example.Demo3.entities.City;
 import com.example.Demo3.entities.Company;
@@ -12,9 +13,16 @@ import com.example.Demo3.repository.UserRepository;
 import com.example.Demo3.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +58,18 @@ public class CompanyServiceImpl implements CompanyService {
         else {
             throw new AlreadyExistsException(HttpStatus.CONFLICT, "Company Admin Already Exists.");
         }
+    }
+
+    @Override
+    public Page<CompanyDto> getAllCompanies(int pageNo) {
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(pageNo -1, pageSize);
+        Page<Company> companies = companyRepository.findAll(pageable);
+        List<CompanyDto> companyDtoList = companies.stream().map((Company company) ->
+                new CompanyDto(
+                        company.getCompanyId(),
+                        company.getCompanyName())).collect(Collectors.toList());
+        return new PageImpl<>(companyDtoList,  pageable, companyDtoList.size());
     }
 
     public String getEncodedPassword(String password) {
