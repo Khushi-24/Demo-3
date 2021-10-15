@@ -94,4 +94,15 @@ public class MemberServiceImpl implements MemberService {
             throw new BadRequestException(HttpStatus.BAD_REQUEST, "Family Id can't be null.");
         }
     }
+
+    @Override
+    public List<MemberDto> getAllMembersHavingAgeLessThanByAreaId(RequestDtoForMembersHavingAgeLessThanByAreaId dto) {
+        List<Members> membersList = memberRepository.getAllMembersHavingAgeLessThanByAreaId(dto.getAreaId(), dto.getAge());
+        List<MemberDto> memberDtoList = membersList.stream().map((Members member) ->
+                new MemberDto(
+                        member.getMemberId(),
+                        member.getMemberName(),
+                        member.getMemberAge())).collect(Collectors.toList());
+        return memberDtoList;
+    }
 }

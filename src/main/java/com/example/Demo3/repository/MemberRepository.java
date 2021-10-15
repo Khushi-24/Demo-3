@@ -2,6 +2,7 @@ package com.example.Demo3.repository;
 
 import com.example.Demo3.entities.Members;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,4 +13,7 @@ public interface MemberRepository extends JpaRepository<Members, Long> {
     Long countByFamilyFamilyId(Long familyId);
 
     List<Members> findAllByFamilyFamilyId(Long familyId);
+
+    @Query(value = "SELECT m.member_id, m.member_age, m.member_name, m.family_id, m.is_working FROM members as m Inner Join Family as f on f.family_id = m.family_id INNER JOIN society as s on s.society_id = f.society_id where s.area_id =?1 And m.member_age<?2", nativeQuery = true)
+    List<Members> getAllMembersHavingAgeLessThanByAreaId(Long areaId, Long age);
 }

@@ -34,4 +34,10 @@ public class MemberDto {
         this.memberId = memberId;
         this.memberName = memberName;
     }
+
+    public MemberDto(Long memberId, String memberName, Long memberAge) {
+        this.memberId = memberId;
+        this.memberName = memberName;
+        this.memberAge = memberAge;
+    }
 }
