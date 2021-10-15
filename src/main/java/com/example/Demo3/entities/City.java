@@ -26,4 +26,7 @@ public class City {
 
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Company> companySet = new HashSet<>();
+
+    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<CompanyEmployee> companyEmployeeSet = new HashSet<>();
 }

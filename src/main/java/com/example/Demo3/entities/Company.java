@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "Company")
 @Getter
@@ -25,4 +27,7 @@ public class Company {
 
     @ManyToOne
     private City city;
+
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<CompanyEmployee> companyEmployeeSet = new HashSet<>();
 }

@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "Members")
 @Getter
@@ -26,5 +28,8 @@ public class Members {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "familyId", referencedColumnName = "familyId")
     private Family family;
+
+    @OneToMany(mappedBy = "members",cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<CompanyEmployee> companyEmployeeSet = new HashSet<>();
 
 }

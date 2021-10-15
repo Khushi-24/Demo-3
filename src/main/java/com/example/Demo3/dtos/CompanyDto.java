@@ -13,6 +13,8 @@ import javax.validation.constraints.NotNull;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CompanyDto {
 
+    private Long companyId;
+
     @NotNull(message = "Company name is required.")
     @NotBlank(message = "Company name is required.")
     private String companyName;
