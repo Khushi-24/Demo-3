@@ -1,9 +1,6 @@
 package com.example.Demo3.controller;
 
-import com.example.Demo3.dtos.CityDto;
-import com.example.Demo3.dtos.MemberDto;
-import com.example.Demo3.dtos.RequestDtoForMembersHavingAgeLessThanByAreaId;
-import com.example.Demo3.dtos.RequestDtoForMembersHavingAgeLessThanByCityId;
+import com.example.Demo3.dtos.*;
 import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +54,12 @@ public class MemberController {
     @GetMapping("/getAllMembersHavingAgeLessThanByCityId")
     public ResponseEntity<?> getAllMembersHavingAgeLessThanByCityId(@RequestBody RequestDtoForMembersHavingAgeLessThanByCityId dto){
         List<MemberDto> memberDtoList = memberService.getAllMembersHavingAgeLessThanByCityId(dto);
+        return new ResponseEntity<>(memberDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllMembersHavingAgeLessThanBySocietyId")
+    public ResponseEntity<?> getAllMembersHavingAgeLessThanBySocietyId(@RequestBody RequestDtoForMembersHavingAgeLessThanBySocietyId dto){
+        List<MemberDto> memberDtoList = memberService.getAllMembersHavingAgeLessThanBySocietyId(dto);
         return new ResponseEntity<>(memberDtoList, HttpStatus.OK);
     }
 }

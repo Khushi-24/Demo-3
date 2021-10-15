@@ -116,4 +116,15 @@ public class MemberServiceImpl implements MemberService {
                         member.getMemberAge())).collect(Collectors.toList());
         return memberDtoList;
     }
+
+    @Override
+    public List<MemberDto> getAllMembersHavingAgeLessThanBySocietyId(RequestDtoForMembersHavingAgeLessThanBySocietyId dto) {
+        List<Members> membersList = memberRepository.getAllMembersHavingAgeLessThanBySocietyId(dto.getSocietyId(), dto.getAge());
+        List<MemberDto> memberDtoList = membersList.stream().map((Members member) ->
+                new MemberDto(
+                        member.getMemberId(),
+                        member.getMemberName(),
+                        member.getMemberAge())).collect(Collectors.toList());
+        return memberDtoList;
+    }
 }
