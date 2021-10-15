@@ -46,4 +46,9 @@ public class CompanyEmployeeDto {
         this.employeeName = employeeName;
         this.salary = salary;
     }
+
+    public CompanyEmployeeDto(Long companyEmployeeId, String employeeName) {
+        this.companyEmployeeId = companyEmployeeId;
+        this.employeeName = employeeName;
+    }
 }

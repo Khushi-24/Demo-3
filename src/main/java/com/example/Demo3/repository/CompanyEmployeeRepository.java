@@ -1,8 +1,11 @@
 package com.example.Demo3.repository;
 
 import com.example.Demo3.entities.CompanyEmployee;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,4 +26,7 @@ public interface CompanyEmployeeRepository extends JpaRepository<CompanyEmployee
 
     @Query(value = "SELECT c.company_employee_id, c.city_city_id, c.salary, c.designation, c.member_id, c.company_id, c.employee_name ,c.aggregated_salary, c.area_id FROM company_employee as c INNER Join society AS s ON s.area_id = c.area_id where s.society_id= ?1 And c.aggregated_salary< ?2", nativeQuery = true)
     List<CompanyEmployee> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(Long societyId, Long salary);
+
+    @Query(value = "SELECT * FROM company_employee WHERE company_id =?1 AND employee_name LIKE %:keyword%  ORDER BY ?#{#pageable}", nativeQuery = true)
+    Page<CompanyEmployee> findEmployeeByKeyword(Long companyId,@Param("keyword") String keyword,  Pageable pageable);
 }

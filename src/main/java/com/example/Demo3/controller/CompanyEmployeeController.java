@@ -1,12 +1,11 @@
 package com.example.Demo3.controller;
 
-import com.example.Demo3.dtos.CompanyEmployeeDto;
-import com.example.Demo3.dtos.RequestDtoForGettingEmployeesByAreaId;
-import com.example.Demo3.dtos.RequestDtoForGettingEmployeesByCityId;
-import com.example.Demo3.dtos.RequestDtoForGettingEmployeesBySocietyId;
+import com.example.Demo3.dtos.*;
 import com.example.Demo3.entities.CompanyEmployee;
+import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.service.CompanyEmployeeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,5 +44,15 @@ public class CompanyEmployeeController {
         List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryLessThanAndBySocietyId(dto);
         return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
     }
+
+//    @PostMapping("/getEmployeeListByKeywordAndCompanyId")
+//    private ResponseEntity<?> getEmployeeListByKeywordAndCompanyId(@RequestBody RequestDtoToGetEmployeeListByKeywordAndCompanyId dto){
+//        Page<CompanyEmployeeDto> companyEmployeeDtoPage = companyEmployeeService.getEmployeeListByKeywordAndCompanyId(dto);
+//        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployeeDtoPage.getContent();
+//        if(dto.getCompanyId() > companyEmployeeDtoPage.getTotalPages()){
+//            throw new NotFoundException(HttpStatus.NOT_FOUND, "No further page available");
+//        }
+//        return new ResponseEntity<>(companyEmployeeDtoList, HttpStatus.OK);
+//    }
 
 }
