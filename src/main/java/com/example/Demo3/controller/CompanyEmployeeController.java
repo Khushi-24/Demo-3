@@ -1,13 +1,18 @@
 package com.example.Demo3.controller;
 
 import com.example.Demo3.dtos.CompanyEmployeeDto;
+import com.example.Demo3.dtos.RequestDtoForGettingEmployeesByAreaId;
+import com.example.Demo3.entities.CompanyEmployee;
 import com.example.Demo3.service.CompanyEmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,5 +24,11 @@ public class CompanyEmployeeController {
     private ResponseEntity<?> addMemberToCompany(@RequestBody CompanyEmployeeDto companyEmployeeDto){
         CompanyEmployeeDto dto = companyEmployeeService.addMemberToCompany(companyEmployeeDto);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getListOfEmployeesHavingSalaryLessByAreaId")
+    private ResponseEntity<?> getListOfEmployeesHavingSalaryLessByAreaId(@RequestBody RequestDtoForGettingEmployeesByAreaId dto){
+        List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryLessByAreaId(dto);
+        return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
     }
 }

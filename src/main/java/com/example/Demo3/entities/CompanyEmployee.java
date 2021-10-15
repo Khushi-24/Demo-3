@@ -23,6 +23,10 @@ public class CompanyEmployee {
     private Company company;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "areaId", referencedColumnName = "areaId")
+    private Area area;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private City city;
 
     @Column

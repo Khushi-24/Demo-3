@@ -1,6 +1,7 @@
 package com.example.Demo3.serviceImpl;
 
 import com.example.Demo3.dtos.CompanyEmployeeDto;
+import com.example.Demo3.dtos.RequestDtoForGettingEmployeesByAreaId;
 import com.example.Demo3.entities.*;
 import com.example.Demo3.exception.AlreadyExistsException;
 import com.example.Demo3.exception.BadRequestException;
@@ -11,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -78,6 +82,20 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
             }
 
         }
+    }
+
+    @Override
+    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessByAreaId(RequestDtoForGettingEmployeesByAreaId dto) {
+
+        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndByAreaId(
+                dto.getAreaId(),
+                dto.getSalary()
+        );
+        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployees.stream().map((CompanyEmployee employee)->
+                new CompanyEmployeeDto(employee.getCompanyEmployeeId() ,
+                        employee.getEmployeeName(),
+                        employee.getSalary())).collect(Collectors.toList());
+        return companyEmployeeDtoList;
     }
 
 }
