@@ -7,4 +7,6 @@ public interface CityService {
     CityDto addCity(CityDto cityDto);
 
     Page<CityDto> getAllCities(int pageNo);
+
+    CityDto getCityById(Long cityId);
 }

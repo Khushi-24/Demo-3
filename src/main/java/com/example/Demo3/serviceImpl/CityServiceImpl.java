@@ -3,6 +3,7 @@ package com.example.Demo3.serviceImpl;
 import com.example.Demo3.dtos.CityDto;
 import com.example.Demo3.entities.City;
 import com.example.Demo3.exception.AlreadyExistsException;
+import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.repository.CityRepository;
 import com.example.Demo3.service.CityService;
 import lombok.RequiredArgsConstructor;
@@ -47,5 +48,14 @@ public class CityServiceImpl implements CityService {
                         city.getCityId(),
                         city.getCityName())).collect(Collectors.toList());
         return new PageImpl<>(cityDtoList,  pageable, cityDtoList.size());
+    }
+
+    @Override
+    public CityDto getCityById(Long cityId) {
+        City city = cityRepository.findById(cityId).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND,
+                "City doesn't exists"));
+        CityDto cityDto = new CityDto();
+        modelMapper.map(city, cityDto);
+        return cityDto;
     }
 }

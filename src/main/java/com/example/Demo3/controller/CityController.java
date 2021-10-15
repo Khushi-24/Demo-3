@@ -34,4 +34,10 @@ public class CityController {
         return new ResponseEntity<>(cityDtoList, HttpStatus.OK);
     }
 
+    @GetMapping("/getCityById/{cityId}")
+    public ResponseEntity<?> getCityById(@PathVariable Long cityId){
+        CityDto cityDto = cityService.getCityById(cityId);
+        return new ResponseEntity<>(cityDto, HttpStatus.CREATED);
+    }
+
 }
