@@ -17,4 +17,7 @@ public interface CompanyEmployeeRepository extends JpaRepository<CompanyEmployee
 
     @Query(value = "SELECT * FROM company_employee where area_id= ?1 And aggregated_salary< ?2", nativeQuery = true)
     List<CompanyEmployee> getListOfEmployeesHavingSalaryLessThanAndByAreaId(Long areaId, Long salary);
+
+    @Query(value = "SELECT * FROM company_employee where city_city_id= ?1 And aggregated_salary< ?2", nativeQuery = true)
+    List<CompanyEmployee> getListOfEmployeesHavingSalaryLessThanAndByCityId(Long cityId, Long salary);
 }
