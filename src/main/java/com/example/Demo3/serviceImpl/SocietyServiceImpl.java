@@ -1,6 +1,5 @@
 package com.example.Demo3.serviceImpl;
 
-import com.example.Demo3.dtos.AreaDto;
 import com.example.Demo3.dtos.SocietyDto;
 import com.example.Demo3.dtos.UserDto;
 import com.example.Demo3.entities.Area;

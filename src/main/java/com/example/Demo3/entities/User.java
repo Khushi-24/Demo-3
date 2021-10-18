@@ -1,6 +1,5 @@
 package com.example.Demo3.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 

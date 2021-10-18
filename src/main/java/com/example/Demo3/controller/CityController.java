@@ -5,7 +5,6 @@ import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.service.CityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,7 +40,7 @@ public class CityController {
     @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<?> getCityById(@PathVariable Long cityId){
         CityDto cityDto = cityService.getCityById(cityId);
-        return new ResponseEntity<>(cityDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(cityDto, HttpStatus.OK);
     }
 
 }

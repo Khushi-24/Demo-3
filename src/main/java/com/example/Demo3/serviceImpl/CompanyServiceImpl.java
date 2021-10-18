@@ -1,6 +1,5 @@
 package com.example.Demo3.serviceImpl;
 
-import com.example.Demo3.dtos.CityDto;
 import com.example.Demo3.dtos.CompanyDto;
 import com.example.Demo3.entities.City;
 import com.example.Demo3.entities.Company;

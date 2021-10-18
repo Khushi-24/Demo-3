@@ -1,9 +1,7 @@
 package com.example.Demo3.controller;
 
-import com.example.Demo3.dtos.CityDto;
 import com.example.Demo3.dtos.CompanyDto;
 import com.example.Demo3.exception.NotFoundException;
-import com.example.Demo3.repository.CompanyRepository;
 import com.example.Demo3.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

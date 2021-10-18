@@ -1,7 +1,9 @@
 package com.example.Demo3.serviceImpl;
 
-import com.example.Demo3.dtos.*;
-import com.example.Demo3.entities.City;
+import com.example.Demo3.dtos.MemberDto;
+import com.example.Demo3.dtos.RequestDtoForMembersHavingAgeLessThanByAreaId;
+import com.example.Demo3.dtos.RequestDtoForMembersHavingAgeLessThanByCityId;
+import com.example.Demo3.dtos.RequestDtoForMembersHavingAgeLessThanBySocietyId;
 import com.example.Demo3.entities.Family;
 import com.example.Demo3.entities.Members;
 import com.example.Demo3.exception.BadRequestException;

@@ -1,7 +1,8 @@
 package com.example.Demo3.serviceImpl;
 
 import com.example.Demo3.dtos.*;
-import com.example.Demo3.entities.*;
+import com.example.Demo3.entities.CompanyEmployee;
+import com.example.Demo3.entities.Members;
 import com.example.Demo3.exception.AlreadyExistsException;
 import com.example.Demo3.exception.BadRequestException;
 import com.example.Demo3.exception.NotFoundException;
@@ -128,17 +129,17 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
         return companyEmployeeDtoList;
     }
 
-//    @Override
-//    public Page<CompanyEmployeeDto> getEmployeeListByKeywordAndCompanyId(RequestDtoToGetEmployeeListByKeywordAndCompanyId dto) {
-//        int pageSize = 5;
-//        int pageNo = dto.getPageNo();
-//        Pageable pageable = PageRequest.of(pageNo -1, pageSize);
-//        Page<CompanyEmployee> companyEmployees = companyEmployeeRepository.findEmployeeByKeyword(dto.getCompanyId(),dto.getKeyword(), pageable);
-//        List<CompanyEmployeeDto> companyEmployeeList = companyEmployees.stream().map((CompanyEmployee c) ->
-//                new CompanyEmployeeDto(
-//                        c.getCompanyEmployeeId(),
-//                        c.getEmployeeName())).collect(Collectors.toList());
-//        return new PageImpl<>(companyEmployeeList,  pageable, companyEmployeeList.size());
-//    }
+    @Override
+    public Page<CompanyEmployeeDto> getEmployeeListByKeywordAndCompanyId(RequestDtoToGetEmployeeListByKeywordAndCompanyId dto) {
+        int pageSize = 5;
+        int pageNo = dto.getPageNo();
+        Pageable pageable = PageRequest.of(pageNo -1, pageSize);
+        Page<CompanyEmployee> companyEmployees = companyEmployeeRepository.findEmployeeByKeyword(dto.getCompanyId(),dto.getKeyword(), pageable);
+        List<CompanyEmployeeDto> companyEmployeeList = companyEmployees.stream().map((CompanyEmployee c) ->
+                new CompanyEmployeeDto(
+                        c.getCompanyEmployeeId(),
+                        c.getEmployeeName())).collect(Collectors.toList());
+        return new PageImpl<>(companyEmployeeList,  pageable, companyEmployeeList.size());
+    }
 
 }

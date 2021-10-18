@@ -1,9 +1,7 @@
 package com.example.Demo3.serviceImpl;
 
-import com.example.Demo3.dtos.*;
-import com.example.Demo3.entities.City;
+import com.example.Demo3.dtos.FamilyDto;
 import com.example.Demo3.entities.Family;
-import com.example.Demo3.entities.Members;
 import com.example.Demo3.entities.Society;
 import com.example.Demo3.exception.BadRequestException;
 import com.example.Demo3.exception.NotFoundException;
@@ -20,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service

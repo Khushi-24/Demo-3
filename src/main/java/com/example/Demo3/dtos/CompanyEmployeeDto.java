@@ -1,6 +1,5 @@
 package com.example.Demo3.dtos;
 
-import com.example.Demo3.entities.Members;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

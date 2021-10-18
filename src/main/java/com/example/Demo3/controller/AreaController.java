@@ -2,7 +2,6 @@ package com.example.Demo3.controller;
 
 import com.example.Demo3.dtos.AreaDto;
 import com.example.Demo3.exception.NotFoundException;
-import com.example.Demo3.repository.AreaRepository;
 import com.example.Demo3.service.AreaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

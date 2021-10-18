@@ -1,7 +1,6 @@
 package com.example.Demo3.controller;
 
 import com.example.Demo3.dtos.*;
-import com.example.Demo3.entities.CompanyEmployee;
 import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.service.CompanyEmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -50,14 +49,14 @@ public class CompanyEmployeeController {
         return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
     }
 
-//    @PostMapping("/getEmployeeListByKeywordAndCompanyId")
-//    private ResponseEntity<?> getEmployeeListByKeywordAndCompanyId(@RequestBody RequestDtoToGetEmployeeListByKeywordAndCompanyId dto){
-//        Page<CompanyEmployeeDto> companyEmployeeDtoPage = companyEmployeeService.getEmployeeListByKeywordAndCompanyId(dto);
-//        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployeeDtoPage.getContent();
-//        if(dto.getCompanyId() > companyEmployeeDtoPage.getTotalPages()){
-//            throw new NotFoundException(HttpStatus.NOT_FOUND, "No further page available");
-//        }
-//        return new ResponseEntity<>(companyEmployeeDtoList, HttpStatus.OK);
-//    }
+    @PostMapping("/getEmployeeListByKeywordAndCompanyId")
+    private ResponseEntity<?> getEmployeeListByKeywordAndCompanyId(@RequestBody RequestDtoToGetEmployeeListByKeywordAndCompanyId dto){
+        Page<CompanyEmployeeDto> companyEmployeeDtoPage = companyEmployeeService.getEmployeeListByKeywordAndCompanyId(dto);
+        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployeeDtoPage.getContent();
+        if(dto.getCompanyId() > companyEmployeeDtoPage.getTotalPages()){
+            throw new NotFoundException(HttpStatus.NOT_FOUND, "No further page available");
+        }
+        return new ResponseEntity<>(companyEmployeeDtoList, HttpStatus.OK);
+    }
 
 }
