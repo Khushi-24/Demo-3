@@ -20,21 +20,21 @@ public class FamilyController {
 
     @PostMapping("/addFamily")
     @PreAuthorize("hasAnyRole('Admin','Society Admin')")
-    private ResponseEntity<?> addFamily(@RequestBody FamilyDto familyDto){
+    public ResponseEntity<?> addFamily(@RequestBody FamilyDto familyDto){
         FamilyDto dto = familyService.addFamily(familyDto);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @GetMapping("/getFamilyByFamilyId/{familyId}")
     @PreAuthorize("hasAnyRole('Admin','Society Admin')")
-    private ResponseEntity<?> getFamilyByFamilyId(@PathVariable Long familyId){
+    public ResponseEntity<?> getFamilyByFamilyId(@PathVariable Long familyId){
         FamilyDto familyDto = familyService.getFamilyByFamilyId(familyId);
         return new ResponseEntity<>(familyDto, HttpStatus.OK);
     }
 
     @PostMapping("/getAllFamilies/{pageNo}")
     @PreAuthorize("hasAnyRole('Admin','Society Admin')")
-    private ResponseEntity<?> getAllFamilies(@PathVariable int pageNo){
+    public ResponseEntity<?> getAllFamilies(@PathVariable int pageNo){
         Page<FamilyDto> familyDtoPage = familyService.getAllFamilies(pageNo);
         List<FamilyDto> familyDtoList = familyDtoPage.getContent();
         if(pageNo> familyDtoPage.getTotalPages()){
@@ -45,7 +45,7 @@ public class FamilyController {
 
     @GetMapping("/getAllFamiliesBySocietyId/{societyId}")
     @PreAuthorize("hasAnyRole('Admin','Society Admin')")
-    private ResponseEntity<?> getAllFamiliesBySocietyId(@PathVariable Long societyId){
+    public ResponseEntity<?> getAllFamiliesBySocietyId(@PathVariable Long societyId){
         List<FamilyDto> familyDtoList = familyService.getAllFamiliesBySocietyId(societyId);
         return new ResponseEntity<>(familyDtoList, HttpStatus.OK);
     }

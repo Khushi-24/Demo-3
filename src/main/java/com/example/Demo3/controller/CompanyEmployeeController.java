@@ -23,34 +23,34 @@ public class CompanyEmployeeController {
 
     @PostMapping("/addMemberToCompany")
     @PreAuthorize("hasAnyRole('Admin','Company Admin')")
-    private ResponseEntity<?> addMemberToCompany(@RequestBody CompanyEmployeeDto companyEmployeeDto){
+    public ResponseEntity<?> addMemberToCompany(@RequestBody CompanyEmployeeDto companyEmployeeDto){
         CompanyEmployeeDto dto = companyEmployeeService.addMemberToCompany(companyEmployeeDto);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @GetMapping("/getListOfEmployeesHavingSalaryLessByAreaId")
     @PreAuthorize("hasAnyRole('Admin','Company Admin')")
-    private ResponseEntity<?> getListOfEmployeesHavingSalaryLessByAreaId(@RequestBody RequestDtoForGettingEmployeesByAreaId dto){
+    public ResponseEntity<?> getListOfEmployeesHavingSalaryLessByAreaId(@RequestBody RequestDtoForGettingEmployeesByAreaId dto){
         List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryLessByAreaId(dto);
         return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
     }
 
     @GetMapping("/getListOfEmployeesHavingSalaryLessThanAndByCityId")
     @PreAuthorize("hasAnyRole('Admin','Company Admin')")
-    private ResponseEntity<?> getListOfEmployeesHavingSalaryLessThanAndByCityId(@RequestBody RequestDtoForGettingEmployeesByCityId dto){
+    public ResponseEntity<?> getListOfEmployeesHavingSalaryLessThanAndByCityId(@RequestBody RequestDtoForGettingEmployeesByCityId dto){
         List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryLessThanAndByCityId(dto);
         return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
     }
 
     @GetMapping("/getListOfEmployeesHavingSalaryLessThanAndBySocietyId")
     @PreAuthorize("hasAnyRole('Admin','Company Admin')")
-    private ResponseEntity<?> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(@RequestBody RequestDtoForGettingEmployeesBySocietyId dto){
+    public ResponseEntity<?> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(@RequestBody RequestDtoForGettingEmployeesBySocietyId dto){
         List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryLessThanAndBySocietyId(dto);
         return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
     }
 
     @PostMapping("/getEmployeeListByKeywordAndCompanyId")
-    private ResponseEntity<?> getEmployeeListByKeywordAndCompanyId(@RequestBody RequestDtoToGetEmployeeListByKeywordAndCompanyId dto){
+    public ResponseEntity<?> getEmployeeListByKeywordAndCompanyId(@RequestBody RequestDtoToGetEmployeeListByKeywordAndCompanyId dto){
         Page<CompanyEmployeeDto> companyEmployeeDtoPage = companyEmployeeService.getEmployeeListByKeywordAndCompanyId(dto);
         List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployeeDtoPage.getContent();
         if(dto.getCompanyId() > companyEmployeeDtoPage.getTotalPages()){
@@ -58,5 +58,4 @@ public class CompanyEmployeeController {
         }
         return new ResponseEntity<>(companyEmployeeDtoList, HttpStatus.OK);
     }
-
 }

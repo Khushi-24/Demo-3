@@ -23,7 +23,7 @@ public class CompanyController {
 
     @PostMapping("/addCompany")
     @PreAuthorize("hasAnyRole('Admin','Company Admin')")
-    private ResponseEntity<?> addCompany(@RequestBody CompanyDto companyDto){
+    public ResponseEntity<?> addCompany(@RequestBody CompanyDto companyDto){
         CompanyDto dto = companyService.addCompany(companyDto);
         return  new ResponseEntity<>(dto, HttpStatus.CREATED);
     }

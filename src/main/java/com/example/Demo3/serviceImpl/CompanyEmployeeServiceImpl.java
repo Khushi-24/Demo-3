@@ -134,7 +134,7 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
         int pageSize = 5;
         int pageNo = dto.getPageNo();
         Pageable pageable = PageRequest.of(pageNo -1, pageSize);
-        Page<CompanyEmployee> companyEmployees = companyEmployeeRepository.findEmployeeByKeyword(dto.getCompanyId(),dto.getKeyword(), pageable);
+        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.findEmployeeByKeyword(dto.getCompanyId(),dto.getKeyword());
         List<CompanyEmployeeDto> companyEmployeeList = companyEmployees.stream().map((CompanyEmployee c) ->
                 new CompanyEmployeeDto(
                         c.getCompanyEmployeeId(),
