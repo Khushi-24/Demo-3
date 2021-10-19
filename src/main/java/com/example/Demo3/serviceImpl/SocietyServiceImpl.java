@@ -1,5 +1,6 @@
 package com.example.Demo3.serviceImpl;
 
+import com.example.Demo3.dtos.MailDto;
 import com.example.Demo3.dtos.SocietyDto;
 import com.example.Demo3.dtos.UserDto;
 import com.example.Demo3.entities.Area;
@@ -12,6 +13,7 @@ import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.repository.AreaRepository;
 import com.example.Demo3.repository.SocietyRepository;
 import com.example.Demo3.repository.UserRepository;
+import com.example.Demo3.service.MailService;
 import com.example.Demo3.service.SocietyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,6 +31,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SocietyServiceImpl implements SocietyService {
+
+    private final MailService mailService;
 
     private final AreaRepository areaRepository;
 
@@ -54,6 +58,13 @@ public class SocietyServiceImpl implements SocietyService {
             userRepository.save(user);
             society.setSocietyAdminEmail(user.getUserEmail());
             societyRepository.save(society);
+            User u = userRepository.findByUserRole("Admin");
+            MailDto mail = new MailDto();
+            mail.setMailFrom("jiyanikhushali24@gmail.com");
+            mail.setMailTo(u.getUserEmail());
+            mail.setMailSubject("Regarding Admin of Society");
+            mail.setMailContent("You have added new Society Admin to " +societyDto.getSocietyName());
+            mailService.sendEmail(mail);
             societyDto.getUserDto().setUserPassword(null);
             return societyDto;
         } else {
