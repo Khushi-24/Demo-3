@@ -1,6 +1,7 @@
 package com.example.Demo3.serviceImpl;
 
 import com.example.Demo3.dtos.*;
+import com.example.Demo3.entities.Company;
 import com.example.Demo3.entities.CompanyEmployee;
 import com.example.Demo3.entities.Members;
 import com.example.Demo3.exception.AlreadyExistsException;
@@ -8,6 +9,7 @@ import com.example.Demo3.exception.BadRequestException;
 import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.repository.*;
 import com.example.Demo3.service.CompanyEmployeeService;
+import com.example.Demo3.service.MailService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -38,6 +40,8 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
 
     private final FamilyRepository familyRepository;
 
+    private final MailService mailService;
+
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Override
@@ -63,6 +67,7 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
 //                    }else{
 //                        new BadRequestException(HttpStatus.BAD_REQUEST, "Member Belongs to different city.");
 //                    }
+                    Company c = companyRepository.getById(companyEmployeeDto.getCompanyDto().getCompanyId());
                     if(companyEmployeeRepository.existsByMembersMemberId(companyEmployeeDto.getMemberDto().getMemberId())){
                         CompanyEmployee companyEmployee = companyEmployeeRepository.findByMembersMemberId(companyEmployeeDto.getMemberDto().getMemberId());
                         Long salary = companyEmployee.getSalary();
@@ -75,6 +80,12 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
                     CompanyEmployee companyEmployee = new CompanyEmployee();
                     modelMapper.map(companyEmployeeDto, companyEmployee);
                     companyEmployee.setMembers(members);
+                    MailDto mail = new MailDto();
+                    mail.setMailFrom("jiyanikhushali24@gmail.com");
+                    mail.setMailTo(c.getAdminEmail());
+                    mail.setMailSubject("Regarding Employees of Company");
+                    mail.setMailContent("A new employee has been added to your company");
+                    mailService.sendEmail(mail);
                     companyEmployeeRepository.save(companyEmployee);
                     return companyEmployeeDto;
                 }else {
