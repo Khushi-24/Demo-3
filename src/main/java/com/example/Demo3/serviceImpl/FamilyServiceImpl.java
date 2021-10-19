@@ -1,13 +1,17 @@
 package com.example.Demo3.serviceImpl;
 
 import com.example.Demo3.dtos.FamilyDto;
+import com.example.Demo3.dtos.MailDto;
 import com.example.Demo3.entities.Family;
 import com.example.Demo3.entities.Society;
+import com.example.Demo3.entities.User;
 import com.example.Demo3.exception.BadRequestException;
 import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.repository.FamilyRepository;
 import com.example.Demo3.repository.SocietyRepository;
+import com.example.Demo3.repository.UserRepository;
 import com.example.Demo3.service.FamilyService;
+import com.example.Demo3.service.MailService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -28,6 +32,8 @@ public class FamilyServiceImpl implements FamilyService {
 
     private final SocietyRepository societyRepository;
 
+    private final MailService mailService;
+
     private final ModelMapper modelMapper = new ModelMapper();
 
 
@@ -37,6 +43,12 @@ public class FamilyServiceImpl implements FamilyService {
                 new NotFoundException(HttpStatus.NOT_FOUND, "Society doesn't exists with society Id " +familyDto.getSocietyDto().getSocietyId()));
         Family family = new Family();
         modelMapper.map(familyDto, family);
+        MailDto mail = new MailDto();
+        mail.setMailFrom("jiyanikhushali24@gmail.com");
+        mail.setMailTo(society.getSocietyAdminEmail());
+        mail.setMailSubject("Regarding Families of Society");
+        mail.setMailContent("A new family is added to your society with " +familyDto.getFamilyMembers()+ " members.");
+        mailService.sendEmail(mail);
         familyRepository.save(family);
         return familyDto;
     }
