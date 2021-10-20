@@ -29,9 +29,9 @@ public interface CompanyEmployeeRepository extends JpaRepository<CompanyEmployee
     @Query(value = "SELECT ce.company_employee_id, ce.aggregated_salary, ce.designation, ce.salary, ce.company_id,ce.member_id, ce.created_date, ce.deleted_date FROM company_employee as ce INNER JOIN company as c On c.company_id= ce.company_id INNER JOIN area as a on a.area_id = c.location WHERE a.city_id = ?1 and ce.aggregated_salary<?2 and ce.deleted_date is null", nativeQuery = true)
     List<CompanyEmployee> getListOfEmployeesHavingSalaryLessThanAndByCityId(Long cityId, Long salary);
 
-    @Query(value = "SELECT c.company_employee_id, c.city_city_id, c.salary, c.designation, c.member_id, c.company_id, c.employee_name ,c.aggregated_salary, c.area_id FROM company_employee as c INNER Join society AS s ON s.area_id = c.area_id where s.society_id= ?1 And c.aggregated_salary< ?2", nativeQuery = true)
+    @Query(value = "SELECT ce.company_employee_id, ce.aggregated_salary, ce.designation, ce.salary, ce.company_id,ce.member_id, ce.created_date, ce.deleted_date from company_employee as ce INNER JOIN members as m ON ce.member_id = m.member_id INNER JOIN family as f on m.family_id = f.family_id WHERE f.society_id=?1 and ce.aggregated_salary<?2 and ce.deleted_date is null", nativeQuery = true)
     List<CompanyEmployee> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(Long societyId, Long salary);
 
-    @Query(value = "SELECT * FROM company_employee WHERE company_id =:companyId AND employee_name LIKE %:keyword%", nativeQuery = true)
+    @Query(value = "SELECT * FROM company_employee as ce INNER JOIN members as m ON m.member_id = ce.member_id WHERE ce.company_id =:companyId AND m.member_name LIKE %:keyword%", nativeQuery = true)
     List<CompanyEmployee> findEmployeeByKeyword(@Param("companyId") Long companyId,@Param("keyword") String keyword);
 }

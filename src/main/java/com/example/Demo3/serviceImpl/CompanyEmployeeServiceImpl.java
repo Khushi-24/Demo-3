@@ -14,6 +14,9 @@ import com.example.Demo3.service.MailService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -31,13 +34,7 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
 
     private final AreaRepository areaRepository;
 
-    private final SocietyRepository societyRepository;
-
     private final CompanyRepository companyRepository;
-
-    private final CityRepository cityRepository;
-
-    private final FamilyRepository familyRepository;
 
     private final MailService mailService;
 
@@ -131,30 +128,29 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
 
     @Override
     public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(RequestDtoForGettingEmployeesBySocietyId dto) {
-//        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndBySocietyId(
-//                dto.getSocietyId(),
-//                dto.getSalary()
-//        );
-//        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployees.stream().map((CompanyEmployee employee)->
-//                new CompanyEmployeeDto(employee.getCompanyEmployeeId() ,
-//                        employee.getEmployeeName(),
-//                        employee.getSalary())).collect(Collectors.toList());
-//        return companyEmployeeDtoList;
-        return null;
+        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndBySocietyId(
+                dto.getSocietyId(),
+                dto.getSalary()
+        );
+        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployees.stream().map((CompanyEmployee employee)->
+                new CompanyEmployeeDto(
+                        employee.getCompanyEmployeeId() ,
+                        employee.getDesignation(),
+                        employee.getSalary())).collect(Collectors.toList());
+        return companyEmployeeDtoList;
     }
 
     @Override
     public Page<CompanyEmployeeDto> getEmployeeListByKeywordAndCompanyId(RequestDtoToGetEmployeeListByKeywordAndCompanyId dto) {
-//        int pageSize = 5;
-//        int pageNo = dto.getPageNo();
-//        Pageable pageable = PageRequest.of(pageNo -1, pageSize);
-//        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.findEmployeeByKeyword(dto.getCompanyId(),dto.getKeyword());
-//        List<CompanyEmployeeDto> companyEmployeeList = companyEmployees.stream().map((CompanyEmployee c) ->
-//                new CompanyEmployeeDto(
-//                        c.getCompanyEmployeeId(),
-//                        c.getEmployeeName())).collect(Collectors.toList());
-//        return new PageImpl<>(companyEmployeeList,  pageable, companyEmployeeList.size());
-        return null;
+        int pageSize = 5;
+        int pageNo = dto.getPageNo();
+        Pageable pageable = PageRequest.of(pageNo -1, pageSize);
+        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.findEmployeeByKeyword(dto.getCompanyId(),dto.getKeyword());
+        List<CompanyEmployeeDto> companyEmployeeList = companyEmployees.stream().map((CompanyEmployee c) ->
+                new CompanyEmployeeDto(
+                        c.getCompanyEmployeeId(),
+                        c.getDesignation())).collect(Collectors.toList());
+        return new PageImpl<>(companyEmployeeList,  pageable, companyEmployeeList.size());
     }
 
 }

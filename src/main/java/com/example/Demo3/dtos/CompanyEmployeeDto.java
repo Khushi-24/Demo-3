@@ -40,9 +40,9 @@ public class CompanyEmployeeDto {
         this.salary = salary;
     }
 
-    public CompanyEmployeeDto(Long companyEmployeeId, String employeeName) {
+    public CompanyEmployeeDto(Long companyEmployeeId, String designation) {
         this.companyEmployeeId = companyEmployeeId;
-        this.employeeName = employeeName;
+        this.designation = designation;
     }
 
 }
