@@ -34,9 +34,9 @@ public class CompanyEmployeeDto {
 
     private String employeeName;
 
-    public CompanyEmployeeDto(Long companyEmployeeId, String employeeName, Long salary) {
+    public CompanyEmployeeDto(Long companyEmployeeId, String designation, Long salary) {
         this.companyEmployeeId = companyEmployeeId;
-        this.employeeName = employeeName;
+        this.designation = designation;
         this.salary = salary;
     }
 
@@ -44,4 +44,5 @@ public class CompanyEmployeeDto {
         this.companyEmployeeId = companyEmployeeId;
         this.employeeName = employeeName;
     }
+
 }

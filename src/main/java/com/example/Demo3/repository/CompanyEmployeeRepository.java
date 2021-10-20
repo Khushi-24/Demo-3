@@ -23,7 +23,7 @@ public interface CompanyEmployeeRepository extends JpaRepository<CompanyEmployee
     @Query(value = "SELECT * FROM `company_employee` as c WHERE c.member_id =?1 and c.deleted_date is null", nativeQuery = true)
     CompanyEmployee findByMembersMemberId(Long memberId);
 
-    @Query(value = "SELECT * FROM company_employee where area_id= ?1 And aggregated_salary< ?2", nativeQuery = true)
+    @Query(value = "SELECT ce.company_employee_id, ce.aggregated_salary, ce.designation, ce.salary, ce.company_id,ce.member_id, ce.created_date, ce.deleted_date FROM company_employee as ce INNER JOIN company as c On c.company_id= ce.company_id WHERE c.location = ?1 and ce.aggregated_salary<?2", nativeQuery = true)
     List<CompanyEmployee> getListOfEmployeesHavingSalaryLessThanAndByAreaId(Long areaId, Long salary);
 
     @Query(value = "SELECT * FROM company_employee where city_city_id= ?1 And aggregated_salary< ?2", nativeQuery = true)

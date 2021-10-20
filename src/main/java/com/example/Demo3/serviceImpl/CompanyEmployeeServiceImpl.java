@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -98,31 +99,33 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
     @Override
     public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessByAreaId(RequestDtoForGettingEmployeesByAreaId dto) {
 
-//        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndByAreaId(
-//                dto.getAreaId(),
-//                dto.getSalary()
-//        );
-//        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployees.stream().map((CompanyEmployee employee)->
-//                new CompanyEmployeeDto(employee.getCompanyEmployeeId() ,
-//                        employee.getEmployeeName(),
-//                        employee.getSalary())).collect(Collectors.toList());
-//        return companyEmployeeDtoList;
-        return null;
+        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndByAreaId(
+                dto.getAreaId(),
+                dto.getSalary()
+        );
+
+
+        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployees.stream().map((CompanyEmployee employee)->
+
+                new CompanyEmployeeDto(
+                        employee.getCompanyEmployeeId() ,
+                        employee.getDesignation(),
+                        employee.getSalary())).collect(Collectors.toList());
+        return companyEmployeeDtoList;
     }
 
     @Override
     public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessThanAndByCityId(RequestDtoForGettingEmployeesByCityId dto) {
 
-//        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndByCityId(
-//                dto.getCityId(),
-//                dto.getSalary()
-//        );
-//        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployees.stream().map((CompanyEmployee employee)->
-//                new CompanyEmployeeDto(employee.getCompanyEmployeeId() ,
-//                        employee.getEmployeeName(),
-//                        employee.getSalary())).collect(Collectors.toList());
-//        return companyEmployeeDtoList;
-        return null;
+        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndByCityId(
+                dto.getCityId(),
+                dto.getSalary()
+        );
+        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployees.stream().map((CompanyEmployee employee)->
+                new CompanyEmployeeDto(employee.getCompanyEmployeeId() ,
+                        employee.getDesignation(),
+                        employee.getSalary())).collect(Collectors.toList());
+        return companyEmployeeDtoList;
     }
 
     @Override
