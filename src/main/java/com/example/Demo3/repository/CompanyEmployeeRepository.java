@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -16,8 +17,10 @@ public interface CompanyEmployeeRepository extends JpaRepository<CompanyEmployee
 
     boolean existsByMembersMemberId(Long memberId);
 
+    @Query(value = "SELECT Count(*) FROM `company_employee` as c WHERE c.member_id =?1 and c.deleted_date is null", nativeQuery = true)
     Long countByMembersMemberId(Long memberId);
 
+    @Query(value = "SELECT * FROM `company_employee` as c WHERE c.member_id =?1 and c.deleted_date is null", nativeQuery = true)
     CompanyEmployee findByMembersMemberId(Long memberId);
 
     @Query(value = "SELECT * FROM company_employee where area_id= ?1 And aggregated_salary< ?2", nativeQuery = true)
