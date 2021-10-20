@@ -34,4 +34,8 @@ public interface CompanyEmployeeRepository extends JpaRepository<CompanyEmployee
 
     @Query(value = "SELECT * FROM company_employee as ce INNER JOIN members as m ON m.member_id = ce.member_id WHERE ce.company_id =:companyId AND m.member_name LIKE %:keyword%", nativeQuery = true)
     List<CompanyEmployee> findEmployeeByKeyword(@Param("companyId") Long companyId,@Param("keyword") String keyword);
+
+    CompanyEmployee findByMembersMemberIdAndCompanyCompanyId(Long employeeId, Long companyId);
+
+    List<CompanyEmployee> findAllByMembersMemberId(Long employeeId);
 }

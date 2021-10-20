@@ -1,10 +1,7 @@
 package com.example.Demo3.serviceImpl;
 
 import com.example.Demo3.dtos.*;
-import com.example.Demo3.entities.Area;
-import com.example.Demo3.entities.Company;
-import com.example.Demo3.entities.CompanyEmployee;
-import com.example.Demo3.entities.Members;
+import com.example.Demo3.entities.*;
 import com.example.Demo3.exception.AlreadyExistsException;
 import com.example.Demo3.exception.BadRequestException;
 import com.example.Demo3.exception.NotFoundException;
@@ -32,7 +29,11 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
 
     private final MemberRepository memberRepository;
 
+    private final CityRepository cityRepository;
+
     private final AreaRepository areaRepository;
+
+    private final SocietyRepository societyRepository;
 
     private final CompanyRepository companyRepository;
 
@@ -95,6 +96,8 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
 
     @Override
     public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessByAreaId(RequestDtoForGettingEmployeesByAreaId dto) {
+        Area area = areaRepository.findById(dto.getAreaId()).orElseThrow(() ->
+                new NotFoundException(HttpStatus.NOT_FOUND, "No such area exists with area Id " + dto.getAreaId()));
 
         List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndByAreaId(
                 dto.getAreaId(),
@@ -113,6 +116,8 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
 
     @Override
     public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessThanAndByCityId(RequestDtoForGettingEmployeesByCityId dto) {
+        City city = cityRepository.findById(dto.getCityId()).orElseThrow(() -> new
+                NotFoundException(HttpStatus.NOT_FOUND, "City doesn't exists with cityId = " +dto.getCityId()));
 
         List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndByCityId(
                 dto.getCityId(),
@@ -128,6 +133,9 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
 
     @Override
     public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(RequestDtoForGettingEmployeesBySocietyId dto) {
+        Society society = societyRepository.findById(dto.getSocietyId()).orElseThrow(()->
+                new NotFoundException(HttpStatus.NOT_FOUND, "Society doesn't exists with society Id " +dto.getSocietyId()));
+
         List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndBySocietyId(
                 dto.getSocietyId(),
                 dto.getSalary()
@@ -151,6 +159,25 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
                         c.getCompanyEmployeeId(),
                         c.getDesignation())).collect(Collectors.toList());
         return new PageImpl<>(companyEmployeeList,  pageable, companyEmployeeList.size());
+    }
+
+    @Override
+    public void deleteEmployeeFromCompanyByEmployeeIdAndCompanyId(RequestDtoForEmployeeIdAndCompanyId dto) {
+        Members members = memberRepository.findById(dto.getEmployeeId()).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
+                "Member doesn't exists."));
+        Company company = companyRepository.findById(dto.getCompanyId()).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
+                "Company doesn't exists."));
+        CompanyEmployee companyEmployee = companyEmployeeRepository.findByMembersMemberIdAndCompanyCompanyId(
+                dto.getEmployeeId(),
+                dto.getCompanyId()
+        );
+        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.findAllByMembersMemberId(dto.getEmployeeId());
+        companyEmployees.stream().forEach((e) -> {
+            e.setAggregatedSalary(e.getSalary());
+            companyEmployeeRepository.save(e);
+        });
+        companyEmployee.setDeletedTimeStamp(new Date());
+        companyEmployeeRepository.save(companyEmployee);
     }
 
 }

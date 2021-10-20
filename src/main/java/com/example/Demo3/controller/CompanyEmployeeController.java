@@ -8,10 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -57,5 +54,11 @@ public class CompanyEmployeeController {
             throw new NotFoundException(HttpStatus.NOT_FOUND, "No further page available");
         }
         return new ResponseEntity<>(companyEmployeeDtoList, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteEmployeeFromCompanyByEmployeeIdAndCompanyId")
+    public ResponseEntity<?> deleteEmployeeFromCompanyByEmployeeIdAndCompanyId(@RequestBody RequestDtoForEmployeeIdAndCompanyId dto){
+        companyEmployeeService.deleteEmployeeFromCompanyByEmployeeIdAndCompanyId(dto);
+        return new ResponseEntity<>("Employee deleted successfully from company." ,HttpStatus.OK);
     }
 }
