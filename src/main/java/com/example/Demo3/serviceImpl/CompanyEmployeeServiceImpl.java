@@ -122,7 +122,8 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
                 dto.getSalary()
         );
         List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployees.stream().map((CompanyEmployee employee)->
-                new CompanyEmployeeDto(employee.getCompanyEmployeeId() ,
+                new CompanyEmployeeDto(
+                        employee.getCompanyEmployeeId() ,
                         employee.getDesignation(),
                         employee.getSalary())).collect(Collectors.toList());
         return companyEmployeeDtoList;
