@@ -26,7 +26,8 @@ public class Company {
     private String adminEmail;
 
     @ManyToOne
-    private City city;
+    @JoinColumn(name = "location", referencedColumnName = "areaId")
+    private Area area;
 
     @OneToMany(mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<CompanyEmployee> companyEmployeeSet = new HashSet<>();

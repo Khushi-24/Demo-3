@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity(name = "CompanyEmployee")
 @Getter
 @Setter
-public class CompanyEmployee {
+public class CompanyEmployee extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +22,6 @@ public class CompanyEmployee {
     @JoinColumn(name = "companyId", referencedColumnName = "companyId")
     private Company company;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "areaId", referencedColumnName = "areaId")
-    private Area area;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private City city;
-
     @Column
     private String designation;
 
@@ -37,8 +30,5 @@ public class CompanyEmployee {
 
     @Column
     private Long aggregatedSalary;
-
-    @Column
-    private String employeeName;
 
 }

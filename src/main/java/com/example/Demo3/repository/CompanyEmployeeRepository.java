@@ -16,6 +16,8 @@ public interface CompanyEmployeeRepository extends JpaRepository<CompanyEmployee
 
     boolean existsByMembersMemberId(Long memberId);
 
+    Long countByMembersMemberId(Long memberId);
+
     CompanyEmployee findByMembersMemberId(Long memberId);
 
     @Query(value = "SELECT * FROM company_employee where area_id= ?1 And aggregated_salary< ?2", nativeQuery = true)

@@ -1,5 +1,6 @@
 package com.example.Demo3.repository;
 
+import com.example.Demo3.entities.Area;
 import com.example.Demo3.entities.Members;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,7 @@ public interface MemberRepository extends JpaRepository<Members, Long> {
 
     @Query(value = "SELECT m.member_id, m.member_age, m.member_name, m.family_id, m.is_working FROM members as m Inner Join family as f on f.family_id = m.family_id where f.society_id=?1 And m.member_age<?2",nativeQuery = true)
     List<Members> getAllMembersHavingAgeLessThanBySocietyId(Long societyId, Long age);
+
+//    @Query(name = "SELECT * from area as a INNER JOIN society as s on a.area_id = s.area_id INNER JOIN family as f on f.society_id = s.society_id where f.family_id =?1")
+//    Area getAreaByFamilyFamilyId(Long familyId);
 }

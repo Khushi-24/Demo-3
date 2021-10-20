@@ -1,11 +1,13 @@
 package com.example.Demo3.serviceImpl;
 
 import com.example.Demo3.dtos.CompanyDto;
+import com.example.Demo3.entities.Area;
 import com.example.Demo3.entities.City;
 import com.example.Demo3.entities.Company;
 import com.example.Demo3.entities.User;
 import com.example.Demo3.exception.AlreadyExistsException;
 import com.example.Demo3.exception.NotFoundException;
+import com.example.Demo3.repository.AreaRepository;
 import com.example.Demo3.repository.CityRepository;
 import com.example.Demo3.repository.CompanyRepository;
 import com.example.Demo3.repository.UserRepository;
@@ -31,7 +33,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     private final UserRepository userRepository;
 
-    private final CityRepository cityRepository;
+    private final AreaRepository areaRepository;
 
     private final ModelMapper modelMapper = new ModelMapper();
 
@@ -39,8 +41,8 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDto addCompany(CompanyDto companyDto) {
-        City city = cityRepository.findById(companyDto.getCityDto().getCityId()).orElseThrow(()->
-                new NotFoundException(HttpStatus.NOT_FOUND,"City doesn't exist with cityId " + companyDto.getCityDto().getCityId()));
+        Area area = areaRepository.findById(companyDto.getAreaDto().getAreaId()).orElseThrow(()->
+                new NotFoundException(HttpStatus.NOT_FOUND,"Area doesn't exist with areaId " + companyDto.getAreaDto().getAreaId()));
         if(!userRepository.existsByUserEmail(companyDto.getUser().getUserEmail())){
             User user = new User();
             modelMapper.map(companyDto.getUser(), user);

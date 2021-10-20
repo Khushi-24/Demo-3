@@ -22,12 +22,6 @@ public class CompanyEmployeeDto {
     @NotNull(message = "Company Id is required.")
     private CompanyDto companyDto;
 
-    @NotNull(message = "City Id is required.")
-    private CityDto cityDto;
-
-    @NotNull(message = "AreaDto is required.")
-    private AreaDto areaDto;
-
     @NotNull(message = "Designation is required.")
     @NotBlank(message = "Designation is required.")
     private String designation;

@@ -23,9 +23,9 @@ public class Area {
     private City city;
 
     @OneToMany(mappedBy = "area", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Society> societies = new HashSet<>();
+    private Set<Company> company = new HashSet<>();
 
     @OneToMany(mappedBy = "area", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<CompanyEmployee> companyEmployees = new HashSet<>();
+    private Set<Society> societies = new HashSet<>();
 
 }

@@ -25,8 +25,8 @@ public class CompanyDto {
 
     private String adminEmail;
 
-    @NotNull(message = "City Id is required.")
-    private CityDto cityDto;
+    @NotNull(message = "Area Id is required.")
+    private AreaDto areaDto;
 
     @NotNull(message = "User details is required.")
     private User user;
