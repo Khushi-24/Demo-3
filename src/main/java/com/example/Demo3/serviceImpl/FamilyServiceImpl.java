@@ -1,11 +1,14 @@
 package com.example.Demo3.serviceImpl;
 
-import com.example.Demo3.dtos.FamilyDto;
-import com.example.Demo3.dtos.MailDto;
+import com.example.Demo3.dtos.*;
+import com.example.Demo3.entities.Area;
+import com.example.Demo3.entities.City;
 import com.example.Demo3.entities.Family;
 import com.example.Demo3.entities.Society;
 import com.example.Demo3.exception.BadRequestException;
 import com.example.Demo3.exception.NotFoundException;
+import com.example.Demo3.repository.AreaRepository;
+import com.example.Demo3.repository.CityRepository;
 import com.example.Demo3.repository.FamilyRepository;
 import com.example.Demo3.repository.SocietyRepository;
 import com.example.Demo3.service.FamilyService;
@@ -25,6 +28,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class FamilyServiceImpl implements FamilyService {
+
+    private final AreaRepository areaRepository;
+
+    private final CityRepository cityRepository;
 
     private final FamilyRepository familyRepository;
 
@@ -57,15 +64,21 @@ public class FamilyServiceImpl implements FamilyService {
                 "Family doesn't exists"));
         FamilyDto familyDto = new FamilyDto();
         modelMapper.map(family, familyDto);
-//        SocietyDto societyDto = familyDto.getSocietyDto();
-//        societyDto.setSocietyAddress(null);
-//        societyDto.setUserDto(null);
-//        AreaDto areaDto = societyDto.getAreaDto();
-//        CityDto cityDto = areaDto.getCityDto();
-//        cityDto.setCityState(null);
-//        areaDto.setCityDto(cityDto);
-//        societyDto.setAreaDto(areaDto);
-//        familyDto.setSocietyDto(societyDto);
+        Society society = societyRepository.findById(family.getSociety().getSocietyId()).get();
+        society.setSocietyAddress(null);
+        society.setSocietyAdminEmail(null);
+        SocietyDto societyDto = new SocietyDto();
+        modelMapper.map(society, societyDto);
+        Area area = areaRepository.findById(society.getArea().getAreaId()).get();
+        AreaDto areaDto = new AreaDto();
+        modelMapper.map(area, areaDto);
+        City city = cityRepository.findById(area.getCity().getCityId()).get();
+        CityDto cityDto = new CityDto();
+        modelMapper.map(city, cityDto);
+        cityDto.setCityState(null);
+        areaDto.setCityDto(cityDto);
+        societyDto.setAreaDto(areaDto);
+        familyDto.setSocietyDto(societyDto);
         return familyDto;
     }
 

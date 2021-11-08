@@ -1,8 +1,6 @@
 package com.example.Demo3.serviceImpl;
 
-import com.example.Demo3.dtos.MailDto;
-import com.example.Demo3.dtos.SocietyDto;
-import com.example.Demo3.dtos.UserDto;
+import com.example.Demo3.dtos.*;
 import com.example.Demo3.entities.Area;
 import com.example.Demo3.entities.City;
 import com.example.Demo3.entities.Society;
@@ -11,6 +9,7 @@ import com.example.Demo3.exception.AlreadyExistsException;
 import com.example.Demo3.exception.BadRequestException;
 import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.repository.AreaRepository;
+import com.example.Demo3.repository.CityRepository;
 import com.example.Demo3.repository.SocietyRepository;
 import com.example.Demo3.repository.UserRepository;
 import com.example.Demo3.service.MailService;
@@ -35,6 +34,8 @@ public class SocietyServiceImpl implements SocietyService {
     private final MailService mailService;
 
     private final AreaRepository areaRepository;
+
+    private final CityRepository cityRepository;
 
     private final UserRepository userRepository;
 
@@ -89,12 +90,16 @@ public class SocietyServiceImpl implements SocietyService {
         Society society = societyRepository.findById(societyId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
                 "Society doesn't exists."));
         SocietyDto societyDto = new SocietyDto();
-        Area area = society.getArea();
-        City city = area.getCity();
-        city.setCityState(null);
-        area.setCity(city);
-        society.setArea(area);
+        Area area = areaRepository.findById(society.getArea().getAreaId()).get();
+        AreaDto areaDto = new AreaDto();
+        City city = cityRepository.findById(area.getCity().getCityId()).get();
+        CityDto cityDto = new CityDto();
+        modelMapper.map(city, cityDto);
+        cityDto.setCityState(null);
+        modelMapper.map(area, areaDto);
+        areaDto.setCityDto(cityDto);
         modelMapper.map(society,societyDto);
+        societyDto.setAreaDto(areaDto);
         return societyDto;
     }
 

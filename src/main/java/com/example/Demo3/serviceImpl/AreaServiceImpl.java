@@ -1,6 +1,7 @@
 package com.example.Demo3.serviceImpl;
 
 import com.example.Demo3.dtos.AreaDto;
+import com.example.Demo3.dtos.CityDto;
 import com.example.Demo3.entities.Area;
 import com.example.Demo3.entities.City;
 import com.example.Demo3.exception.AlreadyExistsException;
@@ -62,8 +63,13 @@ public class AreaServiceImpl implements AreaService {
     public AreaDto getAreaByAreaId(Long areaId) {
         Area area = areaRepository.findById(areaId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
                 "Area doesn't exists with areaId " + areaId));
+        City city = cityRepository.findById(area.getCity().getCityId()).get();
+        CityDto cityDto = new CityDto();
+        modelMapper.map(city, cityDto);
+        cityDto.setCityState(null);
         AreaDto areaDto = new AreaDto();
         modelMapper.map(area, areaDto);
+        areaDto.setCityDto(cityDto);
         return areaDto;
     }
 
