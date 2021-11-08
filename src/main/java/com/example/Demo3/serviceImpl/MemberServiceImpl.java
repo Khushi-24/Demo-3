@@ -1,15 +1,10 @@
 package com.example.Demo3.serviceImpl;
 
-import com.example.Demo3.dtos.MemberDto;
-import com.example.Demo3.dtos.RequestDtoForMembersHavingAgeLessThanByAreaId;
-import com.example.Demo3.dtos.RequestDtoForMembersHavingAgeLessThanByCityId;
-import com.example.Demo3.dtos.RequestDtoForMembersHavingAgeLessThanBySocietyId;
-import com.example.Demo3.entities.Family;
-import com.example.Demo3.entities.Members;
+import com.example.Demo3.dtos.*;
+import com.example.Demo3.entities.*;
 import com.example.Demo3.exception.BadRequestException;
 import com.example.Demo3.exception.NotFoundException;
-import com.example.Demo3.repository.FamilyRepository;
-import com.example.Demo3.repository.MemberRepository;
+import com.example.Demo3.repository.*;
 import com.example.Demo3.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,6 +21,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
+    private final AreaRepository areaRepository;
+
+    private final CityRepository cityRepository;
+
+    private final SocietyRepository societyRepository;
 
     private final MemberRepository memberRepository;
 
@@ -54,17 +54,27 @@ public class MemberServiceImpl implements MemberService {
                 "Member doesn't exists."));
         MemberDto memberDto = new MemberDto();
         modelMapper.map(members, memberDto);
-//        FamilyDto familyDto = memberDto.getFamilyDto();
-//        SocietyDto societyDto = familyDto.getSocietyDto();
-//        societyDto.setSocietyAddress(null);
-//        societyDto.setUserDto(null);
-//        AreaDto areaDto = societyDto.getAreaDto();
-//        CityDto cityDto = areaDto.getCityDto();
-//        cityDto.setCityState(null);
-//        areaDto.setCityDto(cityDto);
-//        societyDto.setAreaDto(areaDto);
-//        familyDto.setSocietyDto(societyDto);
-//        memberDto.setFamilyDto(familyDto);
+        memberDto.setMemberAge(null);
+        memberDto.setIsWorking(null);
+        Family family = familyRepository.findById(members.getFamily().getFamilyId()).get();
+        FamilyDto familyDto = new FamilyDto();
+        modelMapper.map(family, familyDto);
+        Society society = societyRepository.findById(family.getSociety().getSocietyId()).get();
+        society.setSocietyAddress(null);
+        society.setSocietyAdminEmail(null);
+        SocietyDto societyDto = new SocietyDto();
+        modelMapper.map(society, societyDto);
+        Area area = areaRepository.findById(society.getArea().getAreaId()).get();
+        AreaDto areaDto = new AreaDto();
+        modelMapper.map(area, areaDto);
+        City city = cityRepository.findById(area.getCity().getCityId()).get();
+        CityDto cityDto = new CityDto();
+        modelMapper.map(city, cityDto);
+        cityDto.setCityState(null);
+        areaDto.setCityDto(cityDto);
+        societyDto.setAreaDto(areaDto);
+        familyDto.setSocietyDto(societyDto);
+        memberDto.setFamilyDto(familyDto);
         return memberDto;
     }
 
