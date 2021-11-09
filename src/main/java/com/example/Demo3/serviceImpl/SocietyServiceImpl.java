@@ -64,7 +64,7 @@ public class SocietyServiceImpl implements SocietyService {
             mail.setMailFrom("jiyanikhushali24@gmail.com");
             mail.setMailTo(u.getUserEmail());
             mail.setMailSubject("Regarding Admin of Society");
-            mail.setMailContent("You have added new Society Admin to " +societyDto.getSocietyName());
+            mail.setMailContent("You are the Society Admin of " +societyDto.getSocietyName());
             mailService.sendEmail(mail);
             societyDto.getUserDto().setUserPassword(null);
             return societyDto;

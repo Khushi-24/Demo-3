@@ -52,7 +52,7 @@ public class FamilyServiceImpl implements FamilyService {
         mail.setMailFrom("jiyanikhushali24@gmail.com");
         mail.setMailTo(society.getSocietyAdminEmail());
         mail.setMailSubject("Regarding Families of Society");
-        mail.setMailContent("A new family is added to your society with " +familyDto.getFamilyMembers()+ " members.");
+        mail.setMailContent("You have added a new family to your society with " +familyDto.getFamilyMembers()+ " members.");
         mailService.sendEmail(mail);
         familyRepository.save(family);
         return familyDto;
