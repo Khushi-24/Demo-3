@@ -76,7 +76,7 @@ public class FamilyServiceImpl implements FamilyService {
         CityDto cityDto = new CityDto();
         modelMapper.map(city, cityDto);
         cityDto.setCityState(null);
-        areaDto.setCityDto(cityDto);
+//        areaDto.setCityId(cityDto);
         societyDto.setAreaDto(areaDto);
         familyDto.setSocietyDto(societyDto);
         return familyDto;
@@ -91,7 +91,7 @@ public class FamilyServiceImpl implements FamilyService {
                 new FamilyDto(
                         family.getFamilyId(),
                         family.getFamilyMembers())).collect(Collectors.toList());
-        return new PageImpl<>(familyDtoList,  pageable, familyDtoList.size());
+        return new PageImpl<>(familyDtoList,  pageable, families.getTotalElements());
     }
 
     @Override

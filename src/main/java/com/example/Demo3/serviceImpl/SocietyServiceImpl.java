@@ -97,7 +97,7 @@ public class SocietyServiceImpl implements SocietyService {
         modelMapper.map(city, cityDto);
         cityDto.setCityState(null);
         modelMapper.map(area, areaDto);
-        areaDto.setCityDto(cityDto);
+//        areaDto.setCityId(cityDto);
         modelMapper.map(society,societyDto);
         societyDto.setAreaDto(areaDto);
         return societyDto;

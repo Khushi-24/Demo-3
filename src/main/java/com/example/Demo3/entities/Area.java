@@ -22,6 +22,9 @@ public class Area {
     @JoinColumn(name = "cityId", referencedColumnName = "cityId")
     private City city;
 
+    @Column(name = "cityId", insertable = false, updatable = false, nullable = false)
+    private Long cityId;
+
     @OneToMany(mappedBy = "area", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Company> company = new HashSet<>();
 

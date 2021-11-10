@@ -29,8 +29,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDto addCity(CityDto cityDto) {
         if(!cityRepository.existsById(cityDto.getCityId())){
-            City city = new City();
-            modelMapper.map(cityDto, city);
+            City city = modelMapper.map(cityDto, City.class);
             cityRepository.save(city);
             return cityDto;
         }else{
@@ -47,7 +46,7 @@ public class CityServiceImpl implements CityService {
                 new CityDto(
                         city.getCityId(),
                         city.getCityName())).collect(Collectors.toList());
-        return new PageImpl<>(cityDtoList,  pageable, cityDtoList.size());
+        return new PageImpl<>(cityDtoList,  pageable, cities.getTotalElements());
     }
 
     @Override

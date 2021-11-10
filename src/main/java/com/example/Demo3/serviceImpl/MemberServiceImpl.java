@@ -71,7 +71,7 @@ public class MemberServiceImpl implements MemberService {
         CityDto cityDto = new CityDto();
         modelMapper.map(city, cityDto);
         cityDto.setCityState(null);
-        areaDto.setCityDto(cityDto);
+//        areaDto.setCityId(cityDto);
         societyDto.setAreaDto(areaDto);
         familyDto.setSocietyDto(societyDto);
         memberDto.setFamilyDto(familyDto);

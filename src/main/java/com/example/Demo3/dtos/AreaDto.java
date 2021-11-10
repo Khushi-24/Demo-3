@@ -23,6 +23,8 @@ public class AreaDto {
 
     @NotNull(message = "City Id is required.")
     @NotBlank(message = "City Id is required.")
+    private Long cityId;
+
     private CityDto cityDto;
 
     public AreaDto(Long areaId, String areaName) {

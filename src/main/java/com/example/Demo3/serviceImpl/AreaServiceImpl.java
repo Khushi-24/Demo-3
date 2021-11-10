@@ -34,11 +34,10 @@ public class AreaServiceImpl implements AreaService {
 
     @Override
     public AreaDto addArea(AreaDto areaDto) {
-        City city = cityRepository.findById(areaDto.getCityDto().getCityId()).orElseThrow(() -> new
-                NotFoundException(HttpStatus.NOT_FOUND, "City doesn't exists with cityId = " +areaDto.getCityDto().getCityId()));
+        City city = cityRepository.findById(areaDto.getCityId()).orElseThrow(() -> new
+                NotFoundException(HttpStatus.NOT_FOUND, "City doesn't exists with cityId = " +areaDto.getCityId()));
         if(!areaRepository.existsById(areaDto.getAreaId())){
-            Area area = new Area();
-            modelMapper.map(areaDto, area);
+            Area area = modelMapper.map(areaDto, Area.class);
             areaRepository.save(area);
             return areaDto;
         }else {
@@ -48,7 +47,7 @@ public class AreaServiceImpl implements AreaService {
     }
 
     @Override
-    public Page<AreaDto> getAllArea(int pageNo) {
+    public Page <AreaDto> getAllArea(int pageNo) {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo -1, pageSize);
         Page<Area> cities = areaRepository.findAll(pageable);
@@ -63,12 +62,10 @@ public class AreaServiceImpl implements AreaService {
     public AreaDto getAreaByAreaId(Long areaId) {
         Area area = areaRepository.findById(areaId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
                 "Area doesn't exists with areaId " + areaId));
-        City city = cityRepository.findById(area.getCity().getCityId()).get();
-        CityDto cityDto = new CityDto();
-        modelMapper.map(city, cityDto);
+        CityDto cityDto = modelMapper.map(area.getCity(), CityDto.class);
         cityDto.setCityState(null);
-        AreaDto areaDto = new AreaDto();
-        modelMapper.map(area, areaDto);
+        AreaDto areaDto = modelMapper.map(area, AreaDto.class);
+        areaDto.setCityId(null);
         areaDto.setCityDto(cityDto);
         return areaDto;
     }
@@ -79,10 +76,9 @@ public class AreaServiceImpl implements AreaService {
             City city = cityRepository.findById(cityId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
                     "City doesn't exists with areaId " + cityId));
             List<Area> areaList = areaRepository.findAllByCityCityId(cityId);
-            List<AreaDto> areaDtoList =areaList.stream().map((Area area)-> new AreaDto(
+            return areaList.stream().map((Area area)-> new AreaDto(
                     area.getAreaId(),
                     area.getAreaName())).collect(Collectors.toList());
-            return areaDtoList;
         }
         else {
             throw new BadRequestException(HttpStatus.BAD_REQUEST, "City Id can't be null.");
