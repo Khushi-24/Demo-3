@@ -35,8 +35,6 @@ public class SocietyServiceImpl implements SocietyService {
 
     private final AreaRepository areaRepository;
 
-    private final CityRepository cityRepository;
-
     private final UserRepository userRepository;
 
     private final SocietyRepository societyRepository;
@@ -47,14 +45,12 @@ public class SocietyServiceImpl implements SocietyService {
 
     @Override
     public SocietyDto addSociety(SocietyDto societyDto) {
-        Area area = areaRepository.findById(societyDto.getAreaDto().getAreaId()).orElseThrow(() ->
-                new NotFoundException(HttpStatus.NOT_FOUND, "No such area exists with area Id " + societyDto.getAreaDto().getAreaId()));
+        Area area = areaRepository.findById(societyDto.getAreaId()).orElseThrow(() ->
+                new NotFoundException(HttpStatus.NOT_FOUND, "No such area exists with area Id " + societyDto.getAreaId()));
         if (!userRepository.existsByUserEmail(societyDto.getUserDto().getUserEmail())) {
-            Society society = new Society();
-            modelMapper.map(societyDto, society);
+            Society society = modelMapper.map(societyDto, Society.class);
             UserDto userDto = societyDto.getUserDto();
-            User user = new User();
-            modelMapper.map(userDto, user);
+            User user = modelMapper.map(userDto, User.class);
             user.setUserPassword(getEncodedPassword(user.getUserPassword()));
             userRepository.save(user);
             society.setSocietyAdminEmail(user.getUserEmail());
@@ -89,17 +85,15 @@ public class SocietyServiceImpl implements SocietyService {
     public SocietyDto getSocietyBySocietyId(Long societyId) {
         Society society = societyRepository.findById(societyId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
                 "Society doesn't exists."));
-        SocietyDto societyDto = new SocietyDto();
-        Area area = areaRepository.findById(society.getArea().getAreaId()).get();
-        AreaDto areaDto = new AreaDto();
-        City city = cityRepository.findById(area.getCity().getCityId()).get();
-        CityDto cityDto = new CityDto();
-        modelMapper.map(city, cityDto);
+        SocietyDto societyDto = modelMapper.map(society,SocietyDto.class);
+        AreaDto areaDto = modelMapper.map(society.getArea(), AreaDto.class);
+        CityDto cityDto = modelMapper.map(society.getArea().getCity(), CityDto.class);
         cityDto.setCityState(null);
-        modelMapper.map(area, areaDto);
-//        areaDto.setCityId(cityDto);
-        modelMapper.map(society,societyDto);
+        areaDto.setCityDto(cityDto);
+        areaDto.setCityId(null);
         societyDto.setAreaDto(areaDto);
+        societyDto.setSocietyAddress(null);
+        societyDto.setAreaId(null);
         return societyDto;
     }
 

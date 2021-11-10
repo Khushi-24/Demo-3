@@ -44,10 +44,9 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     public FamilyDto addFamily(FamilyDto familyDto) {
-        Society society = societyRepository.findById(familyDto.getSocietyDto().getSocietyId()).orElseThrow(()->
-                new NotFoundException(HttpStatus.NOT_FOUND, "Society doesn't exists with society Id " +familyDto.getSocietyDto().getSocietyId()));
-        Family family = new Family();
-        modelMapper.map(familyDto, family);
+        Society society = societyRepository.findById(familyDto.getSocietyId()).orElseThrow(()->
+                new NotFoundException(HttpStatus.NOT_FOUND, "Society doesn't exists with society Id " +familyDto.getSocietyId()));
+        Family family = modelMapper.map(familyDto, Family.class);
         MailDto mail = new MailDto();
         mail.setMailFrom("jiyanikhushali24@gmail.com");
         mail.setMailTo(society.getSocietyAdminEmail());
@@ -62,23 +61,18 @@ public class FamilyServiceImpl implements FamilyService {
     public FamilyDto getFamilyByFamilyId(Long familyId) {
         Family family = familyRepository.findById(familyId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
                 "Family doesn't exists"));
-        FamilyDto familyDto = new FamilyDto();
-        modelMapper.map(family, familyDto);
-        Society society = societyRepository.findById(family.getSociety().getSocietyId()).get();
-        society.setSocietyAddress(null);
-        society.setSocietyAdminEmail(null);
-        SocietyDto societyDto = new SocietyDto();
-        modelMapper.map(society, societyDto);
-        Area area = areaRepository.findById(society.getArea().getAreaId()).get();
-        AreaDto areaDto = new AreaDto();
-        modelMapper.map(area, areaDto);
-        City city = cityRepository.findById(area.getCity().getCityId()).get();
-        CityDto cityDto = new CityDto();
-        modelMapper.map(city, cityDto);
+        FamilyDto familyDto = modelMapper.map(family, FamilyDto.class);
+        SocietyDto societyDto = modelMapper.map(family.getSociety(), SocietyDto.class);
+        societyDto.setSocietyAddress(null);
+        AreaDto areaDto = modelMapper.map(family.getSociety().getArea(), AreaDto.class);
+        CityDto cityDto = modelMapper.map(family.getSociety().getArea().getCity(), CityDto.class);
         cityDto.setCityState(null);
-//        areaDto.setCityId(cityDto);
+        areaDto.setCityId(null);
+        areaDto.setCityDto(cityDto);
+        societyDto.setAreaId(null);
         societyDto.setAreaDto(areaDto);
         familyDto.setSocietyDto(societyDto);
+        familyDto.setSocietyId(null);
         return familyDto;
     }
 

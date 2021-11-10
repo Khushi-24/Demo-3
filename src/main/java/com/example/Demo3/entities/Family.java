@@ -22,6 +22,9 @@ public class Family {
     @JoinColumn(name = "societyId", referencedColumnName = "societyId")
     private Society society;
 
+    @Column(name = "societyId", insertable = false, updatable = false, nullable = false)
+    private Long societyId;
+
     @OneToMany(mappedBy = "family", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Members> members = new HashSet<>();
 }

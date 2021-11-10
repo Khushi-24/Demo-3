@@ -24,6 +24,9 @@ public class Society {
     @JoinColumn(name = "areaId", referencedColumnName = "areaId")
     private Area area;
 
+    @Column(name = "areaId", insertable = false, updatable = false, nullable = false)
+    private Long areaId;
+
     @Column
     private String societyAdminEmail;
 }

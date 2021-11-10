@@ -22,6 +22,8 @@ public class FamilyDto {
     private Long familyMembers;
 
     @NotNull(message = "Society Id is required.")
+    private Long societyId;
+
     private SocietyDto societyDto;
 
     public FamilyDto(Long familyId, Long familyMembers) {

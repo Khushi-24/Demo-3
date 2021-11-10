@@ -26,6 +26,8 @@ public class SocietyDto {
     private String societyAddress;
 
     @NotNull(message = "Area Id is required.")
+    private Long areaId;
+
     private AreaDto areaDto;
 
     @NotNull(message = "User data is required.")
