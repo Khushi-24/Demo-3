@@ -41,17 +41,15 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDto addCompany(CompanyDto companyDto) {
-        Area area = areaRepository.findById(companyDto.getAreaDto().getAreaId()).orElseThrow(()->
-                new NotFoundException(HttpStatus.NOT_FOUND,"Area doesn't exist with areaId " + companyDto.getAreaDto().getAreaId()));
+        Area area = areaRepository.findById(companyDto.getAreaId()).orElseThrow(()->
+                new NotFoundException(HttpStatus.NOT_FOUND,"Area doesn't exist with areaId " + companyDto.getAreaId()));
         if(!userRepository.existsByUserEmail(companyDto.getUser().getUserEmail())){
-            User user = new User();
-            modelMapper.map(companyDto.getUser(), user);
+            User user = modelMapper.map(companyDto.getUser(), User.class);
             user.setUserPassword(getEncodedPassword(user.getUserPassword()));
             userRepository.save(user);
-            Company company = new Company();
             companyDto.setAdminName(user.getUserName());
             companyDto.setAdminEmail(user.getUserEmail());
-            modelMapper.map(companyDto, company);
+            Company company = modelMapper.map(companyDto, Company.class);
             companyRepository.save(company);
             companyDto.setUser(null);
             return companyDto;
@@ -70,7 +68,7 @@ public class CompanyServiceImpl implements CompanyService {
                 new CompanyDto(
                         company.getCompanyId(),
                         company.getCompanyName())).collect(Collectors.toList());
-        return new PageImpl<>(companyDtoList,  pageable, companyDtoList.size());
+        return new PageImpl<>(companyDtoList,  pageable, companies.getTotalElements());
     }
 
     public String getEncodedPassword(String password) {

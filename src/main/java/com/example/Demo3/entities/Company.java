@@ -29,6 +29,9 @@ public class Company {
     @JoinColumn(name = "location", referencedColumnName = "areaId")
     private Area area;
 
+    @Column(name = "location", insertable = false, updatable = false, nullable = false)
+    private Long areaId;
+
     @OneToMany(mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<CompanyEmployee> companyEmployeeSet = new HashSet<>();
 }
