@@ -28,6 +28,8 @@ public class MemberDto {
     private Boolean isWorking;
 
     @NotNull(message = "Family Id is required")
+    private Long familyId;
+
     private FamilyDto familyDto;
 
     public MemberDto(Long memberId, String memberName) {

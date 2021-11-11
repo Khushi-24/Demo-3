@@ -1,14 +1,10 @@
 package com.example.Demo3.serviceImpl;
 
 import com.example.Demo3.dtos.*;
-import com.example.Demo3.entities.Area;
-import com.example.Demo3.entities.City;
 import com.example.Demo3.entities.Family;
 import com.example.Demo3.entities.Society;
 import com.example.Demo3.exception.BadRequestException;
 import com.example.Demo3.exception.NotFoundException;
-import com.example.Demo3.repository.AreaRepository;
-import com.example.Demo3.repository.CityRepository;
 import com.example.Demo3.repository.FamilyRepository;
 import com.example.Demo3.repository.SocietyRepository;
 import com.example.Demo3.service.FamilyService;
@@ -28,10 +24,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class FamilyServiceImpl implements FamilyService {
-
-    private final AreaRepository areaRepository;
-
-    private final CityRepository cityRepository;
 
     private final FamilyRepository familyRepository;
 
@@ -94,11 +86,10 @@ public class FamilyServiceImpl implements FamilyService {
             Society society = societyRepository.findById(societyId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
                     "Society doesn't exists."));
             List<Family>  familyList = familyRepository.findAllBySocietySocietyId(societyId);
-            List<FamilyDto> familyDtoList = familyList.stream().map((Family family) ->
+            return familyList.stream().map((Family family) ->
                     new FamilyDto(
                             family.getFamilyId(),
                             family.getFamilyMembers())).collect(Collectors.toList());
-            return familyDtoList;
         }else{
             throw new BadRequestException(HttpStatus.BAD_REQUEST, "Society Id can't be null.");
         }

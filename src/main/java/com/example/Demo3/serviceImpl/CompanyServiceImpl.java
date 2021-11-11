@@ -2,13 +2,11 @@ package com.example.Demo3.serviceImpl;
 
 import com.example.Demo3.dtos.CompanyDto;
 import com.example.Demo3.entities.Area;
-import com.example.Demo3.entities.City;
 import com.example.Demo3.entities.Company;
 import com.example.Demo3.entities.User;
 import com.example.Demo3.exception.AlreadyExistsException;
 import com.example.Demo3.exception.NotFoundException;
 import com.example.Demo3.repository.AreaRepository;
-import com.example.Demo3.repository.CityRepository;
 import com.example.Demo3.repository.CompanyRepository;
 import com.example.Demo3.repository.UserRepository;
 import com.example.Demo3.service.CompanyService;

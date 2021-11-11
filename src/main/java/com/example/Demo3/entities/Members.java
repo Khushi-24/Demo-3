@@ -29,6 +29,9 @@ public class Members {
     @JoinColumn(name = "familyId", referencedColumnName = "familyId")
     private Family family;
 
+    @Column(name = "familyId", insertable = false, updatable = false, nullable = false)
+    private Long familyId;
+
     @OneToMany(mappedBy = "members",cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<CompanyEmployee> companyEmployeeSet = new HashSet<>();
 

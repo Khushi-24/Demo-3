@@ -1,10 +1,12 @@
 package com.example.Demo3.serviceImpl;
 
 import com.example.Demo3.dtos.*;
-import com.example.Demo3.entities.*;
+import com.example.Demo3.entities.Family;
+import com.example.Demo3.entities.Members;
 import com.example.Demo3.exception.BadRequestException;
 import com.example.Demo3.exception.NotFoundException;
-import com.example.Demo3.repository.*;
+import com.example.Demo3.repository.FamilyRepository;
+import com.example.Demo3.repository.MemberRepository;
 import com.example.Demo3.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,11 +23,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
-    private final AreaRepository areaRepository;
-
-    private final CityRepository cityRepository;
-
-    private final SocietyRepository societyRepository;
 
     private final MemberRepository memberRepository;
 
@@ -35,12 +32,11 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberDto addMember(MemberDto memberDto) {
-        Family family = familyRepository.findById(memberDto.getFamilyDto().getFamilyId()).orElseThrow(() ->
+        Family family = familyRepository.findById(memberDto.getFamilyId()).orElseThrow(() ->
                 new NotFoundException(HttpStatus.NOT_FOUND, "Family with familyId "
-                + memberDto.getFamilyDto().getFamilyId() + " doesn't exists."));
+                + memberDto.getFamilyId() + " doesn't exists."));
         if(memberRepository.countByFamilyFamilyId(family.getFamilyId()) < family.getFamilyMembers() ){
-            Members members = new Members();
-            modelMapper.map(memberDto, members);
+            Members members = modelMapper.map(memberDto, Members.class);
             memberRepository.save(members);
             return memberDto;
         }else {
@@ -52,28 +48,22 @@ public class MemberServiceImpl implements MemberService {
     public MemberDto getMemberByMemberId(Long memberId) {
         Members members = memberRepository.findById(memberId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
                 "Member doesn't exists."));
-        MemberDto memberDto = new MemberDto();
-        modelMapper.map(members, memberDto);
+        MemberDto memberDto = modelMapper.map(members, MemberDto.class);
         memberDto.setMemberAge(null);
         memberDto.setIsWorking(null);
-        Family family = familyRepository.findById(members.getFamily().getFamilyId()).get();
-        FamilyDto familyDto = new FamilyDto();
-        modelMapper.map(family, familyDto);
-        Society society = societyRepository.findById(family.getSociety().getSocietyId()).get();
-        society.setSocietyAddress(null);
-        society.setSocietyAdminEmail(null);
-        SocietyDto societyDto = new SocietyDto();
-        modelMapper.map(society, societyDto);
-        Area area = areaRepository.findById(society.getArea().getAreaId()).get();
-        AreaDto areaDto = new AreaDto();
-        modelMapper.map(area, areaDto);
-        City city = cityRepository.findById(area.getCity().getCityId()).get();
-        CityDto cityDto = new CityDto();
-        modelMapper.map(city, cityDto);
+        memberDto.setFamilyId(null);
+        FamilyDto familyDto = modelMapper.map(members.getFamily(), FamilyDto.class);
+        SocietyDto societyDto = modelMapper.map(members.getFamily().getSociety(), SocietyDto.class);
+        societyDto.setSocietyAddress(null);
+        AreaDto areaDto = modelMapper.map(members.getFamily().getSociety().getArea(), AreaDto.class);
+        CityDto cityDto = modelMapper.map(members.getFamily().getSociety().getArea().getCity(), CityDto.class);
         cityDto.setCityState(null);
-//        areaDto.setCityId(cityDto);
+        areaDto.setCityDto(cityDto);
+        areaDto.setCityId(null);
         societyDto.setAreaDto(areaDto);
+        societyDto.setAreaId(null);
         familyDto.setSocietyDto(societyDto);
+        familyDto.setSocietyId(null);
         memberDto.setFamilyDto(familyDto);
         return memberDto;
     }
@@ -87,7 +77,7 @@ public class MemberServiceImpl implements MemberService {
                 new MemberDto(
                         member.getMemberId(),
                         member.getMemberName())).collect(Collectors.toList());
-        return new PageImpl<>(memberDtoList,  pageable, memberDtoList.size());
+        return new PageImpl<>(memberDtoList,  pageable, members.getTotalElements());
     }
 
     @Override
@@ -96,11 +86,10 @@ public class MemberServiceImpl implements MemberService {
             Family family = familyRepository.findById(familyId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
                     "Family doesn't exists"));
             List<Members> membersList = memberRepository.findAllByFamilyFamilyId(familyId);
-            List<MemberDto> memberDtoList = membersList.stream().map((Members member) ->
+            return membersList.stream().map((Members member) ->
                     new MemberDto(
                             member.getMemberId(),
                             member.getMemberName())).collect(Collectors.toList());
-            return memberDtoList;
         }
         else {
             throw new BadRequestException(HttpStatus.BAD_REQUEST, "Family Id can't be null.");
@@ -110,33 +99,30 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<MemberDto> getAllMembersHavingAgeLessThanByAreaId(RequestDtoForMembersHavingAgeLessThanByAreaId dto) {
         List<Members> membersList = memberRepository.getAllMembersHavingAgeLessThanByAreaId(dto.getAreaId(), dto.getAge());
-        List<MemberDto> memberDtoList = membersList.stream().map((Members member) ->
+        return membersList.stream().map((Members member) ->
                 new MemberDto(
                         member.getMemberId(),
                         member.getMemberName(),
                         member.getMemberAge())).collect(Collectors.toList());
-        return memberDtoList;
     }
 
     @Override
     public List<MemberDto> getAllMembersHavingAgeLessThanByCityId(RequestDtoForMembersHavingAgeLessThanByCityId dto) {
         List<Members> membersList = memberRepository.getAllMembersHavingAgeLessThanByCityId(dto.getCityId(), dto.getAge());
-        List<MemberDto> memberDtoList = membersList.stream().map((Members member) ->
+        return membersList.stream().map((Members member) ->
                 new MemberDto(
                         member.getMemberId(),
                         member.getMemberName(),
                         member.getMemberAge())).collect(Collectors.toList());
-        return memberDtoList;
     }
 
     @Override
     public List<MemberDto> getAllMembersHavingAgeLessThanBySocietyId(RequestDtoForMembersHavingAgeLessThanBySocietyId dto) {
         List<Members> membersList = memberRepository.getAllMembersHavingAgeLessThanBySocietyId(dto.getSocietyId(), dto.getAge());
-        List<MemberDto> memberDtoList = membersList.stream().map((Members member) ->
+        return membersList.stream().map((Members member) ->
                 new MemberDto(
                         member.getMemberId(),
                         member.getMemberName(),
                         member.getMemberAge())).collect(Collectors.toList());
-        return memberDtoList;
     }
 }
