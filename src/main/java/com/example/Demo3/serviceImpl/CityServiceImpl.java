@@ -8,6 +8,7 @@ import com.example.Demo3.repository.CityRepository;
 import com.example.Demo3.service.CityService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,14 +28,16 @@ public class CityServiceImpl implements CityService {
 
     private final ModelMapper modelMapper = new ModelMapper();
 
+    private final MessageSource messageSource;
+
     @Override
-    public CityDto addCity(CityDto cityDto) {
+    public CityDto addCity(CityDto cityDto, Locale locale) {
         if(!cityRepository.existsById(cityDto.getCityId())){
             City city = modelMapper.map(cityDto, City.class);
             cityRepository.save(city);
             return cityDto;
         }else{
-            throw new AlreadyExistsException(HttpStatus.CONFLICT, "City already exists.");
+            throw new AlreadyExistsException(HttpStatus.CONFLICT, messageSource.getMessage("city_already_exists.message", null, locale));
         }
     }
 
@@ -50,9 +54,9 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public CityDto getCityById(Long cityId) {
+    public CityDto getCityById(Long cityId, Locale locale) {
         City city = cityRepository.findById(cityId).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND,
-                "City doesn't exists"));
+                messageSource.getMessage("city_does_not_exists.message", null, locale)));
         CityDto cityDto = new CityDto();
         modelMapper.map(city, cityDto);
         return cityDto;
