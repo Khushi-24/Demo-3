@@ -17,10 +17,14 @@ public class CompanyEmployeeDto {
     private Long companyEmployeeId;
 
     @NotNull(message = "Member Id is required.")
-    private MemberDto memberDto;
+    private Long memberId;
+
+//    private MemberDto memberDto;
 
     @NotNull(message = "Company Id is required.")
-    private CompanyDto companyDto;
+    private Long companyId;
+
+//    private CompanyDto companyDto;
 
     @NotNull(message = "Designation is required.")
     @NotBlank(message = "Designation is required.")

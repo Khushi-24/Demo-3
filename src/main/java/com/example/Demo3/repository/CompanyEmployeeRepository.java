@@ -13,15 +13,16 @@ import java.util.List;
 
 @Repository
 public interface CompanyEmployeeRepository extends JpaRepository<CompanyEmployee, Long> {
-    boolean existsByMembersMemberIdAndCompanyCompanyId(Long memberId, Long companyId);
 
-    boolean existsByMembersMemberId(Long memberId);
+    boolean existsByMemberIdAndCompanyId(Long memberId, Long companyId);
+
+    boolean existsByMemberId(Long memberId);
 
     @Query(value = "SELECT Count(*) FROM `company_employee` as c WHERE c.member_id =?1 and c.deleted_date is null", nativeQuery = true)
-    Long countByMembersMemberId(Long memberId);
+    Long countByMemberId(Long memberId);
 
     @Query(value = "SELECT * FROM `company_employee` as c WHERE c.member_id =?1 and c.deleted_date is null", nativeQuery = true)
-    CompanyEmployee findByMembersMemberId(Long memberId);
+    CompanyEmployee findByMemberId(Long memberId);
 
     @Query(value = "SELECT ce.company_employee_id, ce.aggregated_salary, ce.designation, ce.salary, ce.company_id,ce.member_id, ce.created_date, ce.deleted_date FROM company_employee as ce INNER JOIN company as c On c.company_id= ce.company_id WHERE c.location = ?1 and ce.aggregated_salary<?2 and ce.deleted_date is null", nativeQuery = true)
     List<CompanyEmployee> getListOfEmployeesHavingSalaryLessThanAndByAreaId(Long areaId, Long salary);
@@ -35,7 +36,12 @@ public interface CompanyEmployeeRepository extends JpaRepository<CompanyEmployee
     @Query(value = "SELECT * FROM company_employee as ce INNER JOIN members as m ON m.member_id = ce.member_id WHERE ce.company_id =:companyId AND m.member_name LIKE %:keyword%", nativeQuery = true)
     List<CompanyEmployee> findEmployeeByKeyword(@Param("companyId") Long companyId,@Param("keyword") String keyword);
 
-    CompanyEmployee findByMembersMemberIdAndCompanyCompanyId(Long employeeId, Long companyId);
+    CompanyEmployee findByMemberIdAndCompanyId(Long employeeId, Long companyId);
 
     List<CompanyEmployee> findAllByMembersMemberId(Long employeeId);
+
+    boolean existsByMemberIdAndDeletedTimeStamp(Long memberId, Date deletedTimeStamp);
+
+    List<CompanyEmployee> findByMemberIdAndDeletedTimeStamp(Long memberId, Date deletedTimeStamp);
+
 }

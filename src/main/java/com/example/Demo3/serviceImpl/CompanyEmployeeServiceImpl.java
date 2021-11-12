@@ -41,57 +41,65 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
 
     private final ModelMapper modelMapper = new ModelMapper();
 
+
     @Override
     public CompanyEmployeeDto addMemberToCompany(CompanyEmployeeDto companyEmployeeDto) {
 
-        Members members = memberRepository.findById(companyEmployeeDto.getMemberDto().getMemberId()).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
+        Members members = memberRepository.findById(companyEmployeeDto.getMemberId()).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND,
                 "Member doesn't exists."));
-        Company company = companyRepository.findById(companyEmployeeDto.getCompanyDto().getCompanyId()).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
+        Company company1 = companyRepository.findById(companyEmployeeDto.getCompanyId()).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND,
                 "Company doesn't exists."));
-        if(companyEmployeeRepository.existsByMembersMemberIdAndCompanyCompanyId(
-                companyEmployeeDto.getMemberDto().getMemberId(),
-                companyEmployeeDto.getCompanyDto().getCompanyId())){
-            throw new AlreadyExistsException(HttpStatus.CONFLICT, "Employee Already exists in company");
-        }else{
-            if(members.getIsWorking()){
-                    if(companyEmployeeRepository.existsByMembersMemberId(companyEmployeeDto.getMemberDto().getMemberId())){
-                        if(companyEmployeeRepository.countByMembersMemberId(companyEmployeeDto.getMemberDto().getMemberId()) < 2){
-                            CompanyEmployee companyEmployee = companyEmployeeRepository.findByMembersMemberId(companyEmployeeDto.getMemberDto().getMemberId());
-                            Company company1 = companyRepository.findById(companyEmployee.getCompany().getCompanyId()).get();
-                            Area area1 = areaRepository.getById(company1.getArea().getAreaId());
-                            Area area2 = areaRepository.getById(company.getArea().getAreaId());
-                            if(area1.getCity().getCityId() == area2.getCity().getCityId()){
-                                Long salary = companyEmployee.getSalary();
-                                companyEmployee.setAggregatedSalary(salary + companyEmployeeDto.getSalary());
-                                companyEmployeeDto.setAggregatedSalary(companyEmployee.getAggregatedSalary());
-                            }else{
-                                throw new BadRequestException(HttpStatus.BAD_REQUEST, "Employee can't work in two different cities at a time.");
-                            }
-
+        if(members.getIsWorking()){
+            if(companyEmployeeRepository.existsByMemberIdAndCompanyId(companyEmployeeDto.getMemberId(),
+                    companyEmployeeDto.getCompanyId())){
+                CompanyEmployee companyEmployee = companyEmployeeRepository.findByMemberIdAndCompanyId(companyEmployeeDto.getMemberId(), companyEmployeeDto.getCompanyId());
+                if(companyEmployee.getDeletedTimeStamp() == null){
+                    throw new AlreadyExistsException(HttpStatus.CONFLICT, "Employee Already exists in company");
+                }else{
+                    if(companyEmployeeRepository.existsByMemberIdAndDeletedTimeStamp(companyEmployeeDto.getMemberId(),
+                            null)){
+                        List<CompanyEmployee> companyEmployeeList =companyEmployeeRepository.findByMemberIdAndDeletedTimeStamp(companyEmployeeDto.getMemberId(), null);
+                        CompanyEmployee companyEmployee1 = companyEmployeeList.get(0);
+                        if(company1.getArea().getCity().equals(companyEmployee1.getCompany().getArea().getCity())){
+                            return returnDto(companyEmployeeDto, company1, members);
                         }else{
-                            throw new BadRequestException(HttpStatus.BAD_REQUEST, "Employee is already working in two companies.");
+                            throw new BadRequestException(HttpStatus.BAD_REQUEST, "Employee can't work in two different cities at a time.");
                         }
-
                     }else{
-                        companyEmployeeDto.setAggregatedSalary(companyEmployeeDto.getSalary());
+                        return returnDto(companyEmployeeDto, company1, members);
                     }
-                    CompanyEmployee companyEmployee = new CompanyEmployee();
-                    modelMapper.map(companyEmployeeDto, companyEmployee);
-                    companyEmployee.setMembers(members);
-                    companyEmployee.setCreatedTimeStamp(new Date());
-                    MailDto mail = new MailDto();
-                    mail.setMailFrom("jiyanikhushali24@gmail.com");
-                    mail.setMailTo(company.getAdminEmail());
-                    mail.setMailSubject("Regarding Employees of Company");
-                    mail.setMailContent("A new employee has been added to your company");
-                    mailService.sendEmail(mail);
-                    companyEmployeeRepository.save(companyEmployee);
-                    return companyEmployeeDto;
+                }
             }else{
-                throw new BadRequestException(HttpStatus.BAD_REQUEST, "Member doesn't work.");
+                if(companyEmployeeRepository.existsByMemberIdAndDeletedTimeStamp(companyEmployeeDto.getMemberId(),
+                        null)){
+                    List<CompanyEmployee> companyEmployeeList =companyEmployeeRepository.findByMemberIdAndDeletedTimeStamp(companyEmployeeDto.getMemberId(), null);
+                    CompanyEmployee companyEmployee1 = companyEmployeeList.get(0);
+//                    CompanyEmployee companyEmployee1= companyEmployeeRepository.findByMemberIdAndDeletedTimeStamp(companyEmployeeDto.getMemberId(), null);
+                    if(company1.getArea().getCity().equals(companyEmployee1.getCompany().getArea().getCity())){
+                        return returnDto(companyEmployeeDto, company1, members);
+                    }else{
+                        throw new BadRequestException(HttpStatus.BAD_REQUEST, "Employee can't work in two different cities at a time.");
+                    }
+                }else{
+                    return returnDto(companyEmployeeDto, company1, members);
+                }
             }
+        }else{
+            throw new BadRequestException(HttpStatus.BAD_REQUEST, "Member doesn't work.");
         }
+    }
 
+    public CompanyEmployeeDto returnDto(CompanyEmployeeDto companyEmployeeDto, Company company, Members member){
+        CompanyEmployee companyEmployee1 = modelMapper.map(companyEmployeeDto, CompanyEmployee.class);
+        companyEmployee1.setMembers(member);
+        MailDto mail = new MailDto();
+        mail.setMailFrom("jiyanikhushali24@gmail.com");
+        mail.setMailTo(company.getAdminEmail());
+        mail.setMailSubject("Regarding Employees of Company");
+        mail.setMailContent("A new employee has been added to your company");
+        mailService.sendEmail(mail);
+        companyEmployeeRepository.save(companyEmployee1);
+        return companyEmployeeDto;
     }
 
     @Override
@@ -104,14 +112,12 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
                 dto.getSalary()
         );
 
-
-        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployees.stream().map((CompanyEmployee employee)->
+        return companyEmployees.stream().map((CompanyEmployee employee)->
 
                 new CompanyEmployeeDto(
                         employee.getCompanyEmployeeId() ,
                         employee.getDesignation(),
                         employee.getSalary())).collect(Collectors.toList());
-        return companyEmployeeDtoList;
     }
 
     @Override
@@ -123,12 +129,11 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
                 dto.getCityId(),
                 dto.getSalary()
         );
-        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployees.stream().map((CompanyEmployee employee)->
+        return companyEmployees.stream().map((CompanyEmployee employee)->
                 new CompanyEmployeeDto(
                         employee.getCompanyEmployeeId() ,
                         employee.getDesignation(),
                         employee.getSalary())).collect(Collectors.toList());
-        return companyEmployeeDtoList;
     }
 
     @Override
@@ -140,12 +145,11 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
                 dto.getSocietyId(),
                 dto.getSalary()
         );
-        List<CompanyEmployeeDto> companyEmployeeDtoList = companyEmployees.stream().map((CompanyEmployee employee)->
+        return companyEmployees.stream().map((CompanyEmployee employee)->
                 new CompanyEmployeeDto(
                         employee.getCompanyEmployeeId() ,
                         employee.getDesignation(),
                         employee.getSalary())).collect(Collectors.toList());
-        return companyEmployeeDtoList;
     }
 
     @Override
@@ -167,12 +171,12 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
                 "Member doesn't exists."));
         Company company = companyRepository.findById(dto.getCompanyId()).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
                 "Company doesn't exists."));
-        CompanyEmployee companyEmployee = companyEmployeeRepository.findByMembersMemberIdAndCompanyCompanyId(
+        CompanyEmployee companyEmployee = companyEmployeeRepository.findByMemberIdAndCompanyId(
                 dto.getEmployeeId(),
                 dto.getCompanyId()
         );
         List<CompanyEmployee> companyEmployees = companyEmployeeRepository.findAllByMembersMemberId(dto.getEmployeeId());
-        companyEmployees.stream().forEach((e) -> {
+        companyEmployees.forEach((e) -> {
             e.setAggregatedSalary(e.getSalary());
             companyEmployeeRepository.save(e);
         });
@@ -181,3 +185,10 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
     }
 
 }
+
+
+
+
+
+
+

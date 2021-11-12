@@ -18,9 +18,15 @@ public class CompanyEmployee extends BaseEntity{
     @JoinColumn(name = "memberId", referencedColumnName = "memberId")
     private Members members;
 
+    @Column(name = "memberId", insertable = false, updatable = false, nullable = false)
+    private Long memberId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyId", referencedColumnName = "companyId")
     private Company company;
+
+    @Column(name = "companyId", insertable = false, updatable = false, nullable = false)
+    private Long companyId;
 
     @Column
     private String designation;
