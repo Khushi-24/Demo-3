@@ -12,6 +12,7 @@ import com.example.Demo3.repository.CityRepository;
 import com.example.Demo3.service.AreaService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,16 +34,22 @@ public class AreaServiceImpl implements AreaService {
 
     private final ModelMapper modelMapper = new ModelMapper();
 
+    private final MessageSource messageSource;
+
     @Override
-    public AreaDto addArea(AreaDto areaDto) {
+    public AreaDto addArea(AreaDto areaDto, Locale locale) {
         City city = cityRepository.findById(areaDto.getCityId()).orElseThrow(() -> new
-                NotFoundException(HttpStatus.NOT_FOUND, "City doesn't exists with cityId = " +areaDto.getCityId()));
+                NotFoundException(HttpStatus.NOT_FOUND, messageSource.getMessage("city_does_not_exists.message",
+                null,
+                locale)));
         if(!areaRepository.existsById(areaDto.getAreaId())){
             Area area = modelMapper.map(areaDto, Area.class);
             areaRepository.save(area);
             return areaDto;
         }else {
-            throw new AlreadyExistsException(HttpStatus.CONFLICT, "Area already Exists");
+            throw new AlreadyExistsException(HttpStatus.CONFLICT, messageSource.getMessage("area_already_exists.message",
+                    null,
+                    locale));
         }
 
     }
@@ -59,9 +67,11 @@ public class AreaServiceImpl implements AreaService {
     }
 
     @Override
-    public AreaDto getAreaByAreaId(Long areaId) {
+    public AreaDto getAreaByAreaId(Long areaId, Locale locale) {
         Area area = areaRepository.findById(areaId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
-                "Area doesn't exists with areaId " + areaId));
+                messageSource.getMessage("area_does_not_exists.message",
+                        null,
+                        locale)));
         CityDto cityDto = modelMapper.map(area.getCity(), CityDto.class);
         cityDto.setCityState(null);
         AreaDto areaDto = modelMapper.map(area, AreaDto.class);
@@ -71,17 +81,21 @@ public class AreaServiceImpl implements AreaService {
     }
 
     @Override
-    public List<AreaDto> getListOfAreaByCityId(Long cityId) {
+    public List<AreaDto> getListOfAreaByCityId(Long cityId, Locale locale) {
         if(cityId != null){
             City city = cityRepository.findById(cityId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
-                    "City doesn't exists with areaId " + cityId));
+                    messageSource.getMessage("city_does_not_exists.message",
+                            null,
+                            locale)));
             List<Area> areaList = areaRepository.findAllByCityCityId(cityId);
             return areaList.stream().map((Area area)-> new AreaDto(
                     area.getAreaId(),
                     area.getAreaName())).collect(Collectors.toList());
         }
         else {
-            throw new BadRequestException(HttpStatus.BAD_REQUEST, "City Id can't be null.");
+            throw new BadRequestException(HttpStatus.BAD_REQUEST, messageSource.getMessage("city_id_cannot_be_null.message",
+                    null,
+                    locale));
         }
     }
 }
