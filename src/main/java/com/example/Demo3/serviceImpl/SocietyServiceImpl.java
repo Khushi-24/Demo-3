@@ -16,6 +16,7 @@ import com.example.Demo3.service.MailService;
 import com.example.Demo3.service.SocietyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,10 +45,14 @@ public class SocietyServiceImpl implements SocietyService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final MessageSource messageSource;
+
     @Override
-    public SocietyDto addSociety(SocietyDto societyDto) {
+    public SocietyDto addSociety(SocietyDto societyDto, Locale locale) {
         Area area = areaRepository.findById(societyDto.getAreaId()).orElseThrow(() ->
-                new NotFoundException(HttpStatus.NOT_FOUND, "No such area exists with area Id " + societyDto.getAreaId()));
+                new NotFoundException(HttpStatus.NOT_FOUND, messageSource.getMessage("area_does_not_exists.message",
+                        null,
+                        locale)));
         if (!userRepository.existsByUserEmail(societyDto.getUserDto().getUserEmail())) {
             Society society = modelMapper.map(societyDto, Society.class);
             UserDto userDto = societyDto.getUserDto();
@@ -65,7 +71,9 @@ public class SocietyServiceImpl implements SocietyService {
             societyDto.getUserDto().setUserPassword(null);
             return societyDto;
         } else {
-            throw new AlreadyExistsException(HttpStatus.CONFLICT, "Society Admin Already exists.");
+            throw new AlreadyExistsException(HttpStatus.CONFLICT, messageSource.getMessage("society_admin_already_exists.message",
+                    null,
+                    locale));
         }
     }
 
@@ -82,9 +90,11 @@ public class SocietyServiceImpl implements SocietyService {
     }
 
     @Override
-    public SocietyDto getSocietyBySocietyId(Long societyId) {
+    public SocietyDto getSocietyBySocietyId(Long societyId, Locale locale) {
         Society society = societyRepository.findById(societyId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
-                "Society doesn't exists."));
+                messageSource.getMessage("society_does_not_exists.message",
+                        null,
+                        locale)));
         SocietyDto societyDto = modelMapper.map(society,SocietyDto.class);
         AreaDto areaDto = modelMapper.map(society.getArea(), AreaDto.class);
         CityDto cityDto = modelMapper.map(society.getArea().getCity(), CityDto.class);
@@ -98,19 +108,22 @@ public class SocietyServiceImpl implements SocietyService {
     }
 
     @Override
-    public List<SocietyDto> getSocietyByAreaId(Long areaId) {
+    public List<SocietyDto> getSocietyByAreaId(Long areaId, Locale locale) {
         if(areaId != null){
             Area area = areaRepository.findById(areaId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
-                    "Area doesn't exists with areaId " + areaId));
+                    messageSource.getMessage("area_does_not_exists.message",
+                            null,
+                            locale)));
             List<Society> societyList = societyRepository.findAllByAreaAreaId(areaId);
-            List<SocietyDto> societyDtoList = societyList.stream().map((Society society) ->
+            return societyList.stream().map((Society society) ->
                     new SocietyDto(
                             society.getSocietyId(),
                             society.getSocietyName())).collect(Collectors.toList());
-            return societyDtoList;
         }
        else {
-           throw new BadRequestException(HttpStatus.BAD_REQUEST, "Area Id can't be null.");
+           throw new BadRequestException(HttpStatus.BAD_REQUEST, messageSource.getMessage("area_id_cannot_be_null",
+                   null,
+                   locale));
         }
     }
 

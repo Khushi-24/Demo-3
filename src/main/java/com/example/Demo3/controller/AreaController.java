@@ -36,8 +36,7 @@ public class AreaController {
         Page<AreaDto> areaDtoPage = areaService.getAllArea(pageNo);
         List<AreaDto> areaDtoList = areaDtoPage.getContent();
         if(pageNo> areaDtoPage.getTotalPages()){
-            String message = messageSource.getMessage("no_further_page_available.message", null, locale);
-            throw new NotFoundException(HttpStatus.NOT_FOUND, message);
+            throw new NotFoundException(HttpStatus.NOT_FOUND, messageSource.getMessage("no_further_page_available.message", null, locale));
         }
         return new ResponseEntity<>(areaDtoList, HttpStatus.OK);
     }
