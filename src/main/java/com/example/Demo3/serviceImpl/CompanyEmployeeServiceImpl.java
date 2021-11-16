@@ -41,7 +41,6 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
 
     private final ModelMapper modelMapper = new ModelMapper();
 
-
     @Override
     public CompanyEmployeeDto addMemberToCompany(CompanyEmployeeDto companyEmployeeDto) {
 
