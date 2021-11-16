@@ -12,6 +12,7 @@ import com.example.Demo3.repository.UserRepository;
 import com.example.Demo3.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,10 +39,12 @@ public class CompanyServiceImpl implements CompanyService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final MessageSource messageSource;
+
     @Override
-    public CompanyDto addCompany(CompanyDto companyDto) {
+    public CompanyDto addCompany(CompanyDto companyDto, Locale locale) {
         Area area = areaRepository.findById(companyDto.getAreaId()).orElseThrow(()->
-                new NotFoundException(HttpStatus.NOT_FOUND,"Area doesn't exist with areaId " + companyDto.getAreaId()));
+                new NotFoundException(HttpStatus.NOT_FOUND,messageSource.getMessage("area_does_not_exists.message", null, locale)));
         if(!userRepository.existsByUserEmail(companyDto.getUser().getUserEmail())){
             User user = modelMapper.map(companyDto.getUser(), User.class);
             user.setUserPassword(getEncodedPassword(user.getUserPassword()));
@@ -53,12 +57,12 @@ public class CompanyServiceImpl implements CompanyService {
             return companyDto;
         }
         else {
-            throw new AlreadyExistsException(HttpStatus.CONFLICT, "Company Admin Already Exists.");
+            throw new AlreadyExistsException(HttpStatus.CONFLICT, messageSource.getMessage("company_already_exists.message", null, locale));
         }
     }
 
     @Override
-    public Page<CompanyDto> getAllCompanies(int pageNo) {
+    public Page<CompanyDto> getAllCompanies(int pageNo, Locale locale) {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo -1, pageSize);
         Page<Company> companies = companyRepository.findAll(pageable);
