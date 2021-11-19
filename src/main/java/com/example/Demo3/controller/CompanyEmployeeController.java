@@ -39,10 +39,10 @@ public class CompanyEmployeeController {
         return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
     }
 
-    @GetMapping("/getListOfEmployeesHavingSalaryLessThanAndBySocietyId")
+    @GetMapping("/getListOfEmployeesHavingSalaryGreaterThanAndBySocietyId")
     @PreAuthorize("hasAnyRole('Admin','Company Admin')")
-    public ResponseEntity<?> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(@RequestBody RequestDtoForGettingEmployeesBySocietyId dto){
-        List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryLessThanAndBySocietyId(dto);
+    public ResponseEntity<?> getListOfEmployeesHavingSalaryGreaterThanAndBySocietyId(@RequestBody RequestDtoForGettingEmployeesBySocietyId dto){
+        List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryGreaterThanAndBySocietyId(dto);
         return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
     }
 

@@ -30,8 +30,8 @@ public interface CompanyEmployeeRepository extends JpaRepository<CompanyEmployee
     @Query(value = "SELECT IF(COUNT(ce.member_id)>1, SUM(ce.salary), ce.salary) as salary, ce.member_id, ce.company_employee_id, ce.designation, ce.company_id, ce.created_date, ce.deleted_date FROM company_employee as ce INNER JOIN members as m ON m.member_id= ce.member_id INNER Join family as f on f.family_id = m.family_id INNER Join society as s on s.society_id= f.society_id INNER JOIN area as a on s.area_id= a.area_id WHERE a.city_id = ?1 And ce.deleted_date is Null GROUP BY ce.member_id HAVING salary>?2", nativeQuery = true)
     List<CompanyEmployee> getListOfEmployeesHavingSalaryGreaterThanAndByCityId(Long cityId, Long salary);
 
-    @Query(value = "SELECT ce.company_employee_id, ce.designation, ce.salary, ce.company_id,ce.member_id, ce.created_date, ce.deleted_date from company_employee as ce INNER JOIN members as m ON ce.member_id = m.member_id INNER JOIN family as f on m.family_id = f.family_id WHERE f.society_id=?1 and ce.aggregated_salary<?2 and ce.deleted_date is null", nativeQuery = true)
-    List<CompanyEmployee> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(Long societyId, Long salary);
+    @Query(value = "SELECT IF(COUNT(ce.member_id)>1, SUM(ce.salary), ce.salary) as salary, ce.member_id, ce.company_employee_id, ce.designation, ce.company_id, ce.created_date, ce.deleted_date FROM company_employee as ce INNER JOIN members as m ON m.member_id= ce.member_id INNER Join family as f on f.family_id = m.family_id WHERE f.society_id =?1 And ce.deleted_date is Null GROUP BY ce.member_id HAVING salary>?2", nativeQuery = true)
+    List<CompanyEmployee> getListOfEmployeesHavingSalaryGreaterThanAndBySocietyId(Long societyId, Long salary);
 
     @Query(value = "SELECT * FROM company_employee as ce INNER JOIN members as m ON m.member_id = ce.member_id WHERE ce.company_id =:companyId AND m.member_name LIKE %:keyword%", nativeQuery = true)
     List<CompanyEmployee> findEmployeeByKeyword(@Param("companyId") Long companyId,@Param("keyword") String keyword);

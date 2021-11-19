@@ -115,7 +115,6 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
 
                 new CompanyEmployeeDto(
                         employee.getCompanyEmployeeId() ,
-                        employee.getDesignation(),
                         employee.getSalary())).collect(Collectors.toList());
     }
 
@@ -131,23 +130,21 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
         return companyEmployees.stream().map((CompanyEmployee employee)->
                 new CompanyEmployeeDto(
                         employee.getCompanyEmployeeId() ,
-                        employee.getDesignation(),
                         employee.getSalary())).collect(Collectors.toList());
     }
 
     @Override
-    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(RequestDtoForGettingEmployeesBySocietyId dto) {
+    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterThanAndBySocietyId(RequestDtoForGettingEmployeesBySocietyId dto) {
         Society society = societyRepository.findById(dto.getSocietyId()).orElseThrow(()->
                 new NotFoundException(HttpStatus.NOT_FOUND, "Society doesn't exists with society Id " +dto.getSocietyId()));
 
-        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndBySocietyId(
+        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryGreaterThanAndBySocietyId(
                 dto.getSocietyId(),
                 dto.getSalary()
         );
         return companyEmployees.stream().map((CompanyEmployee employee)->
                 new CompanyEmployeeDto(
                         employee.getCompanyEmployeeId() ,
-                        employee.getDesignation(),
                         employee.getSalary())).collect(Collectors.toList());
     }
 

@@ -12,7 +12,7 @@ public interface CompanyEmployeeService {
 
     List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterThanAndByCityId(RequestDtoForGettingEmployeesByCityId dto);
 
-    List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(RequestDtoForGettingEmployeesBySocietyId dto);
+    List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterThanAndBySocietyId(RequestDtoForGettingEmployeesBySocietyId dto);
 
     Page<CompanyEmployeeDto> getEmployeeListByKeywordAndCompanyId(RequestDtoToGetEmployeeListByKeywordAndCompanyId dto);
 
