@@ -4,6 +4,7 @@ import com.example.Demo3.Util.JwtUtil;
 import com.example.Demo3.serviceImpl.JwtServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Locale;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -25,6 +27,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtServiceImpl jwtService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -41,12 +46,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 userName = jwtUtil.getUserNameFromToken(jwtToken);
             }catch (IllegalArgumentException e){
-                System.out.println("Unable to get Jwt token.");
+                Locale locale = Locale.getDefault();
+                System.out.println(messageSource.getMessage("unable_to_get_Jwt_token.message", null, locale));
             }catch (ExpiredJwtException e){
-                System.out.println("Jwt Token is Expired");
+                Locale locale = Locale.getDefault();
+                System.out.println(messageSource.getMessage("jwt_token_is_expired.message", null, locale));
             }
         } else {
-            System.out.println("Jwt token doesn't start with Bearer");
+            Locale locale = Locale.getDefault();
+            System.out.println(messageSource.getMessage("jwt_token_does_not_start_with_bearer.message", null, locale));
         }
 
         if(userName != null && SecurityContextHolder.getContext().getAuthentication() == null){

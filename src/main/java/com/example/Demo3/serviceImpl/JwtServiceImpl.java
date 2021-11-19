@@ -6,6 +6,7 @@ import com.example.Demo3.dtos.JwtResponse;
 import com.example.Demo3.entities.User;
 import com.example.Demo3.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 @Service
@@ -30,6 +32,9 @@ public class JwtServiceImpl implements UserDetailsService {
 
     @Autowired
     private  AuthenticationManager authenticationManager;
+
+    @Autowired
+    private MessageSource messageSource;
 
     public JwtResponse createJwtToken(JwtRequest jwtRequest) throws Exception {
         String userEmail = jwtRequest.getUserEmail();
@@ -56,7 +61,8 @@ public class JwtServiceImpl implements UserDetailsService {
                 );
 
         } else {
-            throw new UsernameNotFoundException("User not found with username: " + userEmail);
+            Locale locale = Locale.getDefault();
+            throw new UsernameNotFoundException(messageSource.getMessage("user_not_found.message", null, locale));
         }
     }
 
@@ -71,9 +77,11 @@ public class JwtServiceImpl implements UserDetailsService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userEmail, userPassword));
         } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
+            Locale locale = Locale.getDefault();
+            throw new Exception(messageSource.getMessage("user_disabled.message", null, locale), e);
         } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
+            Locale locale = Locale.getDefault();
+            throw new Exception(messageSource.getMessage("invalid_credentials.message", null, locale), e);
         }
     }
 
