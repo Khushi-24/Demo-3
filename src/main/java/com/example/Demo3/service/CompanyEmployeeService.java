@@ -8,7 +8,7 @@ import java.util.List;
 public interface CompanyEmployeeService {
     CompanyEmployeeDto addMemberToCompany(CompanyEmployeeDto companyEmployeeDto);
 
-    List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessByAreaId(RequestDtoForGettingEmployeesByAreaId dto);
+    List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterByAreaId(RequestDtoForGettingEmployeesByAreaId dto);
 
     List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessThanAndByCityId(RequestDtoForGettingEmployeesByCityId dto);
 

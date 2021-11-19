@@ -102,11 +102,11 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
     }
 
     @Override
-    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessByAreaId(RequestDtoForGettingEmployeesByAreaId dto) {
+    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterByAreaId(RequestDtoForGettingEmployeesByAreaId dto) {
         Area area = areaRepository.findById(dto.getAreaId()).orElseThrow(() ->
                 new NotFoundException(HttpStatus.NOT_FOUND, "No such area exists with area Id " + dto.getAreaId()));
 
-        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndByAreaId(
+        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryGreaterThanAndByAreaId(
                 dto.getAreaId(),
                 dto.getSalary()
         );

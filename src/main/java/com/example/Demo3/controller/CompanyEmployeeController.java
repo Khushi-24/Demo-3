@@ -28,7 +28,7 @@ public class CompanyEmployeeController {
     @GetMapping("/getListOfEmployeesHavingSalaryLessByAreaId")
     @PreAuthorize("hasAnyRole('Admin','Company Admin')")
     public ResponseEntity<?> getListOfEmployeesHavingSalaryLessByAreaId(@RequestBody RequestDtoForGettingEmployeesByAreaId dto){
-        List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryLessByAreaId(dto);
+        List<CompanyEmployeeDto> companyEmployeeDto = companyEmployeeService.getListOfEmployeesHavingSalaryGreaterByAreaId(dto);
         return new ResponseEntity<>(companyEmployeeDto, HttpStatus.OK);
     }
 
