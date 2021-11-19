@@ -10,6 +10,7 @@ import com.example.Demo3.repository.MemberRepository;
 import com.example.Demo3.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,24 +32,25 @@ public class MemberServiceImpl implements MemberService {
 
     private final ModelMapper modelMapper = new ModelMapper();
 
+    private final MessageSource messageSource;
+
     @Override
-    public MemberDto addMember(MemberDto memberDto) {
+    public MemberDto addMember(MemberDto memberDto, Locale locale) {
         Family family = familyRepository.findById(memberDto.getFamilyId()).orElseThrow(() ->
-                new NotFoundException(HttpStatus.NOT_FOUND, "Family with familyId "
-                + memberDto.getFamilyId() + " doesn't exists."));
+                new NotFoundException(HttpStatus.NOT_FOUND, messageSource.getMessage("family_does_not_exists.message", null, locale)));
         if(memberRepository.countByFamilyFamilyId(family.getFamilyId()) < family.getFamilyMembers() ){
             Members members = modelMapper.map(memberDto, Members.class);
             memberRepository.save(members);
             return memberDto;
         }else {
-            throw new BadRequestException(HttpStatus.BAD_REQUEST, "Members can't exceed family size.");
+            throw new BadRequestException(HttpStatus.BAD_REQUEST, messageSource.getMessage("members_cannot_exceed_family_size.message", null, locale));
         }
     }
 
     @Override
-    public MemberDto getMemberByMemberId(Long memberId) {
+    public MemberDto getMemberByMemberId(Long memberId, Locale locale) {
         Members members = memberRepository.findById(memberId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
-                "Member doesn't exists."));
+                messageSource.getMessage("member_does_not_exists.message", null, locale)));
         MemberDto memberDto = modelMapper.map(members, MemberDto.class);
         memberDto.setMemberAge(null);
         memberDto.setIsWorking(null);
@@ -81,10 +84,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<MemberDto> getAllMembersByFamilyId(Long familyId) {
+    public List<MemberDto> getAllMembersByFamilyId(Long familyId, Locale locale) {
         if(familyId != null){
             Family family = familyRepository.findById(familyId).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
-                    "Family doesn't exists"));
+                    messageSource.getMessage("family_does_not_exists.message", null, locale)));
             List<Members> membersList = memberRepository.findAllByFamilyFamilyId(familyId);
             return membersList.stream().map((Members member) ->
                     new MemberDto(
@@ -92,7 +95,7 @@ public class MemberServiceImpl implements MemberService {
                             member.getMemberName())).collect(Collectors.toList());
         }
         else {
-            throw new BadRequestException(HttpStatus.BAD_REQUEST, "Family Id can't be null.");
+            throw new BadRequestException(HttpStatus.BAD_REQUEST, messageSource.getMessage("family_id_cannot_be_null", null, locale));
         }
     }
 
