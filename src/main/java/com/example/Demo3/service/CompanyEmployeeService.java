@@ -10,7 +10,7 @@ public interface CompanyEmployeeService {
 
     List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterByAreaId(RequestDtoForGettingEmployeesByAreaId dto);
 
-    List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessThanAndByCityId(RequestDtoForGettingEmployeesByCityId dto);
+    List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterThanAndByCityId(RequestDtoForGettingEmployeesByCityId dto);
 
     List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessThanAndBySocietyId(RequestDtoForGettingEmployeesBySocietyId dto);
 

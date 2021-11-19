@@ -19,12 +19,8 @@ public class CompanyEmployeeDto {
     @NotNull(message = "Member Id is required.")
     private Long memberId;
 
-//    private MemberDto memberDto;
-
     @NotNull(message = "Company Id is required.")
     private Long companyId;
-
-//    private CompanyDto companyDto;
 
     @NotNull(message = "Designation is required.")
     @NotBlank(message = "Designation is required.")
@@ -33,8 +29,6 @@ public class CompanyEmployeeDto {
     @NotNull(message = "Salary is required.")
     @NotBlank(message = "Salary is required.")
     private Long salary;
-
-    private Long aggregatedSalary;
 
     private String employeeName;
 

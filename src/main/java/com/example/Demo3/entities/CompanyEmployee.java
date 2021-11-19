@@ -34,7 +34,5 @@ public class CompanyEmployee extends BaseEntity{
     @Column
     private Long salary;
 
-    @Column
-    private Long aggregatedSalary;
 
 }

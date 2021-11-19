@@ -120,11 +120,11 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
     }
 
     @Override
-    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryLessThanAndByCityId(RequestDtoForGettingEmployeesByCityId dto) {
+    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterThanAndByCityId(RequestDtoForGettingEmployeesByCityId dto) {
         City city = cityRepository.findById(dto.getCityId()).orElseThrow(() -> new
                 NotFoundException(HttpStatus.NOT_FOUND, "City doesn't exists with cityId = " +dto.getCityId()));
 
-        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryLessThanAndByCityId(
+        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryGreaterThanAndByCityId(
                 dto.getCityId(),
                 dto.getSalary()
         );
@@ -174,11 +174,6 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
                 dto.getEmployeeId(),
                 dto.getCompanyId()
         );
-        List<CompanyEmployee> companyEmployees = companyEmployeeRepository.findAllByMembersMemberId(dto.getEmployeeId());
-        companyEmployees.forEach((e) -> {
-            e.setAggregatedSalary(e.getSalary());
-            companyEmployeeRepository.save(e);
-        });
         companyEmployee.setDeletedTimeStamp(new Date());
         companyEmployeeRepository.save(companyEmployee);
     }
