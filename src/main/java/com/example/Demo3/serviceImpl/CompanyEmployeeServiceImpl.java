@@ -10,6 +10,7 @@ import com.example.Demo3.service.CompanyEmployeeService;
 import com.example.Demo3.service.MailService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,19 +43,21 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
 
     private final ModelMapper modelMapper = new ModelMapper();
 
+    private final MessageSource messageSource;
+
     @Override
-    public CompanyEmployeeDto addMemberToCompany(CompanyEmployeeDto companyEmployeeDto) {
+    public CompanyEmployeeDto addMemberToCompany(CompanyEmployeeDto companyEmployeeDto, Locale locale) {
 
         Members members = memberRepository.findById(companyEmployeeDto.getMemberId()).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND,
-                "Member doesn't exists."));
+                messageSource.getMessage("member_does_not_exists.message", null, locale)));
         Company company1 = companyRepository.findById(companyEmployeeDto.getCompanyId()).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND,
-                "Company doesn't exists."));
+                messageSource.getMessage("company_does_not_exists.message", null, locale)));
         if(members.getIsWorking()){
             if(companyEmployeeRepository.existsByMemberIdAndCompanyId(companyEmployeeDto.getMemberId(),
                     companyEmployeeDto.getCompanyId())){
                 CompanyEmployee companyEmployee = companyEmployeeRepository.findByMemberIdAndCompanyId(companyEmployeeDto.getMemberId(), companyEmployeeDto.getCompanyId());
                 if(companyEmployee.getDeletedTimeStamp() == null){
-                    throw new AlreadyExistsException(HttpStatus.CONFLICT, "Employee Already exists in company");
+                    throw new AlreadyExistsException(HttpStatus.CONFLICT, messageSource.getMessage("employee_already_exists_in_company.message", null, locale));
                 }else{
                     if(companyEmployeeRepository.existsByMemberIdAndDeletedTimeStamp(companyEmployeeDto.getMemberId(),
                             null)){
@@ -62,7 +66,7 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
                         if(company1.getArea().getCity().equals(companyEmployee1.getCompany().getArea().getCity())){
                             return returnDto(companyEmployeeDto, company1, members);
                         }else{
-                            throw new BadRequestException(HttpStatus.BAD_REQUEST, "Employee can't work in two different cities at a time.");
+                            throw new BadRequestException(HttpStatus.BAD_REQUEST, messageSource.getMessage("employee_cannot_work_in_two_different_cities_at_a_time.message", null, locale));
                         }
                     }else{
                         return returnDto(companyEmployeeDto, company1, members);
@@ -77,14 +81,15 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
                     if(company1.getArea().getCity().equals(companyEmployee1.getCompany().getArea().getCity())){
                         return returnDto(companyEmployeeDto, company1, members);
                     }else{
-                        throw new BadRequestException(HttpStatus.BAD_REQUEST, "Employee can't work in two different cities at a time.");
+                        throw new BadRequestException(HttpStatus.BAD_REQUEST,
+                                messageSource.getMessage("employee_cannot_work_in_two_different_cities_at_a_time.message", null, locale));
                     }
                 }else{
                     return returnDto(companyEmployeeDto, company1, members);
                 }
             }
         }else{
-            throw new BadRequestException(HttpStatus.BAD_REQUEST, "Member doesn't work.");
+            throw new BadRequestException(HttpStatus.BAD_REQUEST, messageSource.getMessage("member_does_not_work.message", null, locale));
         }
     }
 
@@ -102,9 +107,9 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
     }
 
     @Override
-    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterByAreaId(RequestDtoForGettingEmployeesByAreaId dto) {
+    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterByAreaId(RequestDtoForGettingEmployeesByAreaId dto, Locale locale) {
         Area area = areaRepository.findById(dto.getAreaId()).orElseThrow(() ->
-                new NotFoundException(HttpStatus.NOT_FOUND, "No such area exists with area Id " + dto.getAreaId()));
+                new NotFoundException(HttpStatus.NOT_FOUND, messageSource.getMessage("area_does_not_exists.message", null, locale)));
 
         List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryGreaterThanAndByAreaId(
                 dto.getAreaId(),
@@ -119,9 +124,9 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
     }
 
     @Override
-    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterThanAndByCityId(RequestDtoForGettingEmployeesByCityId dto) {
+    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterThanAndByCityId(RequestDtoForGettingEmployeesByCityId dto, Locale locale) {
         City city = cityRepository.findById(dto.getCityId()).orElseThrow(() -> new
-                NotFoundException(HttpStatus.NOT_FOUND, "City doesn't exists with cityId = " +dto.getCityId()));
+                NotFoundException(HttpStatus.NOT_FOUND, messageSource.getMessage("city_does_not_exists.message", null, locale)));
 
         List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryGreaterThanAndByCityId(
                 dto.getCityId(),
@@ -134,9 +139,9 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
     }
 
     @Override
-    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterThanAndBySocietyId(RequestDtoForGettingEmployeesBySocietyId dto) {
+    public List<CompanyEmployeeDto> getListOfEmployeesHavingSalaryGreaterThanAndBySocietyId(RequestDtoForGettingEmployeesBySocietyId dto, Locale locale) {
         Society society = societyRepository.findById(dto.getSocietyId()).orElseThrow(()->
-                new NotFoundException(HttpStatus.NOT_FOUND, "Society doesn't exists with society Id " +dto.getSocietyId()));
+                new NotFoundException(HttpStatus.NOT_FOUND, messageSource.getMessage("society_does_not_exists.message", null, locale)));
 
         List<CompanyEmployee> companyEmployees = companyEmployeeRepository.getListOfEmployeesHavingSalaryGreaterThanAndBySocietyId(
                 dto.getSocietyId(),
@@ -162,11 +167,11 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService {
     }
 
     @Override
-    public void deleteEmployeeFromCompanyByEmployeeIdAndCompanyId(RequestDtoForEmployeeIdAndCompanyId dto) {
+    public void deleteEmployeeFromCompanyByEmployeeIdAndCompanyId(RequestDtoForEmployeeIdAndCompanyId dto, Locale locale) {
         Members members = memberRepository.findById(dto.getEmployeeId()).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
-                "Member doesn't exists."));
+                messageSource.getMessage("member_does_not_exists.message", null, locale)));
         Company company = companyRepository.findById(dto.getCompanyId()).orElseThrow(()-> new NotFoundException(HttpStatus.NOT_FOUND,
-                "Company doesn't exists."));
+                messageSource.getMessage("company_does_not_exists.message", null, locale)));
         CompanyEmployee companyEmployee = companyEmployeeRepository.findByMemberIdAndCompanyId(
                 dto.getEmployeeId(),
                 dto.getCompanyId()
