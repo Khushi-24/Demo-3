@@ -63,6 +63,6 @@ public class CompanyEmployeeController {
     @DeleteMapping("/deleteEmployeeFromCompanyByEmployeeIdAndCompanyId")
     public ResponseEntity<?> deleteEmployeeFromCompanyByEmployeeIdAndCompanyId(@RequestBody RequestDtoForEmployeeIdAndCompanyId dto, Locale locale){
         companyEmployeeService.deleteEmployeeFromCompanyByEmployeeIdAndCompanyId(dto, locale);
-        return new ResponseEntity<>("Employee deleted successfully from company." ,HttpStatus.OK);
+        return new ResponseEntity<>(messageSource.getMessage("employee_deleted_successfully.message", null, locale) ,HttpStatus.OK);
     }
 }
